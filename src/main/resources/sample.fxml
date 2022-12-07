@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane minHeight="600" minWidth="800.0" prefHeight="600.0" prefWidth="911.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.urz.oproject.controller.ToDoController">
+   <children>
+      <ImageView fitHeight="660.0" fitWidth="984.0" layoutX="-73.0" layoutY="-7.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@image.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="substractButton" layoutX="79.0" layoutY="62.0" mnemonicParsing="false" onAction="#onSubstractButtonClick" text="SUBSTRACT">
+         <font>
+            <Font name="Chiller" size="30.0" />
+         </font></Button>
+      <Button fx:id="addButton" layoutX="712.0" layoutY="73.0" mnemonicParsing="false" onAction="#onAddButtonClick" text="ADD">
+         <font>
+            <Font name="Chiller" size="30.0" />
+         </font></Button>
+      <Label layoutX="255.0" layoutY="46.0" prefHeight="116.0" prefWidth="402.0" style="-fx-background-color: black; -fx-opacity: 0.5; -fx-background-radius: 25;" />
+      <Label alignment="CENTER" layoutX="278.0" layoutY="40.0" prefHeight="72.0" prefWidth="356.0" text="Witaj samuraju" textFill="WHITE">
+         <font>
+            <Font name="Chiller" size="75.0" />
+         </font>
+      </Label>
+      <ProgressBar fx:id="progressBar" layoutX="356.0" layoutY="153.0" prefWidth="200.0" progress="0.0" />
+      <Label fx:id="label" layoutX="308.0" layoutY="292.0" prefHeight="161.0" prefWidth="283.0" style="-fx-background-color: white;" />
+   </children>
+</AnchorPane>
