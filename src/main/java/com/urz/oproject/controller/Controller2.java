@@ -3,7 +3,11 @@ package com.urz.oproject.controller;
 
 import com.jfoenix.controls.JFXNodesList;
 import com.urz.oproject.model.Task;
+import com.urz.oproject.models.Student;
 import com.urz.oproject.service.TaskService;
+import com.urz.oproject.tableView.AddStudentController;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 
 import javafx.collections.FXCollections;
@@ -11,15 +15,21 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
@@ -72,17 +82,19 @@ public class Controller2 implements Initializable {
     @FXML
     TableView<Task> tableView;
     @FXML
-    TableColumn<Task,Long> idColumn;
+    TableColumn<Task, Long> idColumn;
     @FXML
-    TableColumn<Task,String> shortDescColumn;
+    TableColumn<Task, String> shortDescColumn;
     @FXML
     TableColumn<Task, String> longDesc;
+//    @FXML
+//    TableColumn<Task, Boolean> taskStatus;
+//    @FXML
+//    TableColumn<Task, Boolean> importantStatus;
     @FXML
-    TableColumn<Task, Boolean> taskStatus;
+    private TableColumn<Task, String> editCol;
     @FXML
-    TableColumn<Task, Boolean> importantStatus;
-
-
+    ObservableList<Task> taskList;
 
     @FXML
     private ListView listView;
@@ -129,21 +141,89 @@ public class Controller2 implements Initializable {
         taskService.addTask(new Task("test531", "test long", false, false));
         taskService.addTask(new Task("test55", "test long", false, false));
         taskService.addTask(new Task(6L, "test", "test long", false, false));
-        ObservableList<Task> tasks = FXCollections.observableList(taskService.getTasks());
-        filteredList = new FilteredList<>(tasks, p -> true);
+        taskService.addTask(new Task.TaskBuilder().shortDesc("test builder").longDesc("long test").taskStatus(true).importantStatus(false).build());
+
+        taskList = FXCollections.observableList(taskService.getTasks());
+        filteredList = new FilteredList<>(taskList, p -> true);
         System.out.println(filteredList);
         listView.setItems(filteredList);
 
-        Task test = tasks.get(1);
+        Task test = taskList.get(1);
 
-        idColumn.setCellValueFactory(new PropertyValueFactory<Task,Long>("id"));
-        shortDescColumn.setCellValueFactory(new PropertyValueFactory<Task,String>("shortDesc"));
-        longDesc.setCellValueFactory(new PropertyValueFactory<Task,String>("longDesc"));
-        taskStatus.setCellValueFactory(new PropertyValueFactory<Task,Boolean>("taskStatus"));
-        importantStatus.setCellValueFactory(new PropertyValueFactory<Task,Boolean>("importantStatus"));
+        idColumn.setCellValueFactory(new PropertyValueFactory<Task, Long>("id"));
+        shortDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("shortDesc"));
+        longDesc.setCellValueFactory(new PropertyValueFactory<Task, String>("longDesc"));
+      //  taskStatus.setCellValueFactory(new PropertyValueFactory<Task, Boolean>("taskStatus"));
+       // importantStatus.setCellValueFactory(new PropertyValueFactory<Task, Boolean>("importantStatus"));
+
+        Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory = (TableColumn<Task, String> param) -> {
+            // make cell containing buttons
+            final TableCell<Task, String> cell = new TableCell<Task, String>() {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    //that cell created only on non-empty rows
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+
+                    } else {
+
+                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+                        FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE);
+
+                        deleteIcon.setStyle(
+                                " -fx-cursor: hand ;"
+                                        + "-glyph-size:28px;"
+                                        + "-fx-fill:#ff1744;"
+                        );
+                        editIcon.setStyle(
+                                " -fx-cursor: hand ;"
+                                        + "-glyph-size:28px;"
+                                        + "-fx-fill:#00E676;"
+                        );
+                        deleteIcon.setOnMouseClicked((MouseEvent event) -> {
+                            Task task = tableView.getSelectionModel().getSelectedItem();
+                            taskService.deleteTask(task.getId());
+                            refreshTable();
+                        });
+
+                        editIcon.setOnMouseClicked((MouseEvent event) -> {
+                            Task task = tableView.getSelectionModel().getSelectedItem();
+                            FXMLLoader loader = new FXMLLoader();
+                            loader.setLocation(getClass().getResource("/tableView/addStudent.fxml"));
+                           AddStudentController addStudentController = loader.getController();
+                            addStudentController.setUpdate(true);
+//                            addStudentController.setTextField(student.getId(), student.getName(),
+//                                    student.getBirth().toLocalDate(), student.getAdress(), student.getEmail());
+                           Parent parent = loader.getRoot();
+                            Stage stage = new Stage();
+                            stage.setScene(new Scene(parent));
+                            stage.initStyle(StageStyle.UTILITY);
+                            stage.show();
 
 
-        tableView.setItems(tasks);
+                        });
+
+                        HBox managebtn = new HBox(editIcon, deleteIcon);
+                        managebtn.setStyle("-fx-alignment:center");
+                        HBox.setMargin(deleteIcon, new Insets(2, 2, 0, 3));
+                        HBox.setMargin(editIcon, new Insets(2, 3, 0, 2));
+
+                        setGraphic(managebtn);
+
+                        setText(null);
+
+                    }
+                }
+
+            };
+
+            return cell;
+        };
+        editCol.setCellFactory(cellFactory);
+
+        tableView.setItems(taskList);
 
 
         Node[] nodes = new Node[taskService.getTasks().size()];
@@ -164,6 +244,12 @@ public class Controller2 implements Initializable {
         // listView.setItems(lista);
     }
 
+    @FXML
+    private void refreshTable() {
+        taskList.clear();
+        taskList = FXCollections.observableList(taskService.getTasks());
+        tableView.setItems(taskList);
+    }
 
     public void onExitButtonClick() {
         Platform.exit();

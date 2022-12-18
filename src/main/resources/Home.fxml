@@ -8,7 +8,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -120,6 +119,23 @@
             <Pane fx:id="pnlMenus" prefHeight="200.0" prefWidth="200.0" />
             <Pane fx:id="pnlOverview" prefHeight="567.0" prefWidth="794.0">
                <children>
+                  <TableView fx:id="tableView" layoutX="22.0" layoutY="189.0" prefHeight="497.0" prefWidth="755.0">
+                     <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="75.0" text="id" />
+                        <TableColumn fx:id="shortDescColumn" prefWidth="157.60003662109375" text="shortDesc" />
+                        <TableColumn fx:id="longDesc" prefWidth="115.20004272460938" text="longDesc" />
+                        <TableColumn fx:id="taskStatus" prefWidth="182.4000244140625" text="taskStatus" />
+                        <TableColumn fx:id="importantStatus" prefWidth="136.7999267578125" text="importantStatus" />
+                     </columns>
+                  </TableView>
+                  <VBox fx:id="pnItems" layoutX="9.0" layoutY="176.0" prefHeight="515.0" prefWidth="762.0" spacing="5.0" style="-fx-background-color: #F4FFF8;" visible="false">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </VBox>
                   <TextField layoutX="581.0" layoutY="41.0" prefHeight="38.0" prefWidth="201.0" promptText="search" style="-fx-background-color: #F4FFF8; -fx-border-color: #1c3738; -fx-border-radius: 2em;" />
                   <Label layoutX="25.0" layoutY="34.0" text="Today Tasks" textFill="#1c3738">
                      <font>
@@ -160,29 +176,6 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <ScrollPane layoutX="14.0" layoutY="188.0" prefHeight="502.0" prefWidth="768.0" stylesheets="@style.css">
-                     <content>
-                        <VBox fx:id="pnItems" prefHeight="515.0" prefWidth="762.0" spacing="5.0" style="-fx-background-color: #F4FFF8;">
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding>
-                           <effect>
-                              <DropShadow />
-                           </effect>
-                           <children>
-                              <TableView fx:id="tableView" prefHeight="512.0" prefWidth="754.0">
-                                 <columns>
-                                    <TableColumn fx:id="idColumn" prefWidth="75.0" text="id" />
-                                    <TableColumn fx:id="shortDescColumn" prefWidth="157.60003662109375" text="shortDesc" />
-                                    <TableColumn fx:id="longDesc" prefWidth="115.20004272460938" text="longDesc" />
-                                    <TableColumn fx:id="taskStatus" prefWidth="182.4000244140625" text="taskStatus" />
-                                    <TableColumn fx:id="importantStatus" prefWidth="136.7999267578125" text="importantStatus" />
-                                 </columns>
-                              </TableView>
-                           </children>
-                        </VBox>
-                     </content>
-                  </ScrollPane>
                   <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="754.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/icons8_Search_52px.png" />

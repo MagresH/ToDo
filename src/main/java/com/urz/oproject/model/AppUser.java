@@ -2,6 +2,7 @@ package com.urz.oproject.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Data
 @Entity
 @Table(name="\"User\"")
+@Builder
 public class AppUser implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
