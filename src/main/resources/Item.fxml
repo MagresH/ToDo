@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXToggleNode?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="item" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="53.0" prefWidth="751.0" spacing="80.0" style="-fx-background-color: #1C3738; -fx-background-radius: 5; -fx-background-insets: 0;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.urz.oproject.controller.Item">
+    <children>
+      <JFXCheckBox fx:id="taskStatusCheckBox" checkedColor="#ffffff26" contentDisplay="CENTER" onAction="#onCheckBoxClick" prefHeight="54.0" prefWidth="500.0" text="Test" textFill="WHITE" unCheckedColor="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <HBox.margin>
+            <Insets left="20.0" />
+         </HBox.margin>
+         <effect>
+            <DropShadow />
+         </effect>
+      </JFXCheckBox>
+      <JFXToggleNode fx:id="favourite" onAction="#onClick" prefHeight="47.0" prefWidth="67.0" textFill="TRANSPARENT">
+         <HBox.margin>
+            <Insets left="80.0" />
+         </HBox.margin>
+         <unSelectedColor>
+            <Color red="0.10980392247438431" green="0.21568627655506134" blue="0.21960784494876862" opacity="0.6399999856948853" />
+         </unSelectedColor>
+         <selectedColor>
+            <Color red="1.0" green="0.9666666388511658" opacity="0.20000000298023224" />
+         </selectedColor>
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="STAR" size="25" />
+         </graphic>
+      </JFXToggleNode>
+    </children>
+</HBox>

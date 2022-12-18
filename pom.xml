@@ -23,11 +23,25 @@
     <dependencies>
 
         <!-- JavaFX -->
+
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>9.0.10</version>
+        </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>17.0.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/de.jensd/fontawesomefx-fontawesome -->
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-fontawesome</artifactId>
+            <version>4.7.0-9.1.2</version>
+        </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -95,6 +109,7 @@
         </dependency>
 
 
+
     </dependencies>
 
     <build>
@@ -117,7 +132,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
-
                 </configuration>
             </plugin>
             <plugin>
