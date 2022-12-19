@@ -5,6 +5,7 @@
  */
 package com.urz.oproject.tableView;
 
+import com.urz.oproject.controller.AddStudentController;
 import com.urz.oproject.helpers.DbConnect;
 import com.urz.oproject.models.Student;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -194,16 +195,20 @@ public class TableViewController implements Initializable {
                             
                             student = studentsTable.getSelectionModel().getSelectedItem();
                             FXMLLoader loader = new FXMLLoader ();
-                            loader.setLocation(getClass().getResource("/tableView/addStudent.fxml"));
+                            try {
+                                loader.load(getClass().getResource("/addStudent.fxml"));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             try {
                                 loader.load();
                             } catch (IOException ex) {
                                 Logger.getLogger(TableViewController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
+
                             AddStudentController addStudentController = loader.getController();
                             addStudentController.setUpdate(true);
-                            addStudentController.setTextField(student.getId(), student.getName(), 
+                            addStudentController.setTextField(student.getId(), student.getName(),
                                     student.getBirth().toLocalDate(),student.getAdress(), student.getEmail());
                             Parent parent = loader.getRoot();
                             Stage stage = new Stage();

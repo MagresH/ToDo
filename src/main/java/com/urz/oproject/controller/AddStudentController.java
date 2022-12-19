@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.urz.oproject.tableView;
+package com.urz.oproject.controller;
 
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
@@ -123,7 +123,7 @@ public class AddStudentController implements Initializable {
 
     }
 
-    void setTextField(int id, String name, LocalDate toLocalDate, String adress, String email) {
+    public void setTextField(int id, String name, LocalDate toLocalDate, String adress, String email) {
 
         studentId = id;
         nameFld.setText(name);

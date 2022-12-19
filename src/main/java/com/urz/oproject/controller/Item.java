@@ -34,11 +34,6 @@ public class Item extends HBox{
     @FXML
     FontAwesomeIconView star;
 
-    public Item(String shortText) {
-        this.shortText = shortText;
-        //
-    }
-
     public HBox getNode(){
         item.getChildren().add(taskStatusCheckBox);
         item.getChildren().add(favourite);

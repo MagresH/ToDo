@@ -3,12 +3,9 @@ package com.urz.oproject.controller;
 
 import com.jfoenix.controls.JFXNodesList;
 import com.urz.oproject.model.Task;
-import com.urz.oproject.models.Student;
 import com.urz.oproject.service.TaskService;
-import com.urz.oproject.tableView.AddStudentController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.application.Platform;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,12 +24,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +48,8 @@ public class Controller2 implements Initializable {
     private JFXNodesList nodesList;
     @FXML
     private Button btnOverview;
+    @FXML
+    private Label totalTask;
 
     private FilteredList<Task> filteredList;
     @FXML
@@ -142,8 +144,8 @@ public class Controller2 implements Initializable {
         taskService.addTask(new Task("test55", "test long", false, false));
         taskService.addTask(new Task(6L, "test", "test long", false, false));
         taskService.addTask(new Task.TaskBuilder().shortDesc("test builder").longDesc("long test").taskStatus(true).importantStatus(false).build());
-
         taskList = FXCollections.observableList(taskService.getTasks());
+        totalTask.setText(String.valueOf(taskList.size()));
         filteredList = new FilteredList<>(taskList, p -> true);
         System.out.println(filteredList);
         listView.setItems(filteredList);
@@ -186,21 +188,24 @@ public class Controller2 implements Initializable {
                             Task task = tableView.getSelectionModel().getSelectedItem();
                             taskService.deleteTask(task.getId());
                             refreshTable();
+                            totalTask.setText(String.valueOf(taskList.size()));
                         });
 
                         editIcon.setOnMouseClicked((MouseEvent event) -> {
                             Task task = tableView.getSelectionModel().getSelectedItem();
-                            FXMLLoader loader = new FXMLLoader();
-                            loader.setLocation(getClass().getResource("/tableView/addStudent.fxml"));
-                           AddStudentController addStudentController = loader.getController();
-                            addStudentController.setUpdate(true);
+                         //   AddStudentController addStudentController = loader.getController();
+                        //    addStudentController.setUpdate(true);
 //                            addStudentController.setTextField(student.getId(), student.getName(),
 //                                    student.getBirth().toLocalDate(), student.getAdress(), student.getEmail());
-                           Parent parent = loader.getRoot();
-                            Stage stage = new Stage();
-                            stage.setScene(new Scene(parent));
-                            stage.initStyle(StageStyle.UTILITY);
-                            stage.show();
+                            final Stage dialog = new Stage();
+                            dialog.initModality(Modality.APPLICATION_MODAL);
+                         //   dialog.initOwner(primaryStage);
+                            VBox dialogVbox = new VBox(20);
+                            dialogVbox.getChildren().add(new Text("This is a Dialog"));
+                            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                            dialog.setScene(dialogScene);
+                            dialog.show();
+
 
 
                         });
@@ -222,25 +227,27 @@ public class Controller2 implements Initializable {
             return cell;
         };
         editCol.setCellFactory(cellFactory);
-
+        tableView.getStyleClass().add("noheader");
         tableView.setItems(taskList);
 
 
-        Node[] nodes = new Node[taskService.getTasks().size()];
-        for (int i = 0; i < taskService.getTasks().size(); i++) {
-            Item item = new Item(taskService.getTasks().get(i).getShortDesc());
-            if (item.getShortText() == null) System.out.println("nie dziala");
-            else {
-                System.out.println("DZIALA");
-                System.out.println("opis zadania: " + item.getShortText());
-            }
-            nodes[i] = item;
+        tableView.getSelectionModel().getSelectedItem().getLongDesc();
 
-            // nodes[i] = FXMLLoader.load(getClass().getResource("/Item.fxml"));
-            pnItems.getChildren().add(nodes[i]);
-        }
-        List<Node> list = Arrays.asList(nodes);
-        ObservableList<Node> lista = FXCollections.observableList(list);
+//        Node[] nodes = new Node[taskService.getTasks().size()];
+//        for (int i = 0; i < taskService.getTasks().size(); i++) {
+//            Item item = new Item(taskService.getTasks().get(i).getShortDesc());
+//            if (item.getShortText() == null) System.out.println("nie dziala");
+//            else {
+//                System.out.println("DZIALA");
+//                System.out.println("opis zadania: " + item.getShortText());
+//            }
+//            nodes[i] = item;
+//
+//            // nodes[i] = FXMLLoader.load(getClass().getResource("/Item.fxml"));
+//            pnItems.getChildren().add(nodes[i]);
+//        }
+//        List<Node> list = Arrays.asList(nodes);
+//        ObservableList<Node> lista = FXCollections.observableList(list);
         // listView.setItems(lista);
     }
 
@@ -249,10 +256,6 @@ public class Controller2 implements Initializable {
         taskList.clear();
         taskList = FXCollections.observableList(taskService.getTasks());
         tableView.setItems(taskList);
-    }
-
-    public void onExitButtonClick() {
-        Platform.exit();
     }
 
     public void handleClicks(ActionEvent actionEvent) {

@@ -11,7 +11,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="452.0" prefWidth="641.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.urz.oproject.tableView.TableViewController">
     <stylesheets>
-        <URL value="@tableview.css" />
+        <URL value="@../../../../../resources/tableview.css" />
     </stylesheets>
    <children>
       <TableView fx:id="studentsTable" layoutX="34.0" layoutY="157.0" prefHeight="265.0" prefWidth="574.0">
