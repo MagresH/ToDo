@@ -1,10 +1,7 @@
 package com.urz.oproject.controller;
 
 
-import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXNodesList;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
 import com.urz.oproject.model.Task;
 import com.urz.oproject.service.TaskService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -15,11 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,16 +24,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Controller
@@ -86,11 +75,15 @@ public class Controller2 implements Initializable {
     @FXML
     private Pane pnlMenus;
     @FXML
-    TableView<Task> tableView;
+    TableView<Task> toDoTableView;
+    @FXML
+    TableView<Task> toDoTableView1;
     @FXML
     TableColumn<Task, Long> idColumn;
     @FXML
     TableColumn<Task, String> shortDescColumn;
+    @FXML
+    TableColumn<Task, String> shortDescColumn1;
     @FXML
     TableColumn<Task, String> longDesc;
     //    @FXML
@@ -100,7 +93,11 @@ public class Controller2 implements Initializable {
     @FXML
     private TableColumn<Task, String> editCol;
     @FXML
+    private TableColumn<Task, String> editCol1;
+    @FXML
     ObservableList<Task> taskList;
+    @FXML
+    ObservableList<Task> doneTaskList;
 
     @FXML
     private ListView listView;
@@ -150,12 +147,13 @@ public class Controller2 implements Initializable {
         taskService.addTask(new Task.TaskBuilder().shortDesc("test builder").longDesc("long test").taskStatus(true).importantStatus(false).build());
 
         taskList = FXCollections.observableList(taskService.getTasks());
+        doneTaskList = FXCollections.observableList(taskService.getTasks());
+        doneTaskList.clear();
+
 
         totalTask.setText(String.valueOf(taskList.size()));
 
-        filteredList = new FilteredList<>(taskList, p -> true);
-        System.out.println(filteredList);
-        listView.setItems(filteredList);
+        //  listView.setItems(taskList);
 
         shortDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("shortDesc"));
 
@@ -168,12 +166,9 @@ public class Controller2 implements Initializable {
                     if (empty) {
                         setGraphic(null);
                         setText(null);
-
                     } else {
-                        CheckBox checkBox = new CheckBox();
                         FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK);
                         FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE);
-
                         deleteIcon.setStyle(
                                 " -fx-cursor: hand ;"
                                         + "-glyph-size:28px;"
@@ -185,35 +180,42 @@ public class Controller2 implements Initializable {
                                         + "-fx-fill:#00E676;"
                         );
 
-                        tableView.setOnMouseClicked((MouseEvent event) -> {
-                            Task selectedTask = tableView.getSelectionModel().getSelectedItem();
+                        toDoTableView.setOnMouseClicked((MouseEvent event) -> {
+                            Task selectedTask = toDoTableView.getSelectionModel().getSelectedItem();
                             if (selectedTask != null) {
                                 if (event.getClickCount() == 2) //Checking double click
                                 {
                                     Stage dialog = new Stage();
                                     dialog.initModality(Modality.APPLICATION_MODAL);
-                                    //   dialog.initOwner(primaryStage);
+
                                     VBox dialogVbox = new VBox(20);
                                     Label label = new Label(selectedTask.getLongDesc());
                                     dialogVbox.getChildren().add(label);
                                     Scene dialogScene = new Scene(dialogVbox, 300, 200);
                                     dialog.setScene(dialogScene);
                                     dialog.show();
-                                    System.out.println("You clicked on " + tableView.getSelectionModel().getSelectedItem().getShortDesc());
+                                    System.out.println("You clicked on " + toDoTableView.getSelectionModel().getSelectedItem().getShortDesc());
 
                                 }
                             }
                         });
                         deleteIcon.setOnMouseClicked((MouseEvent event) -> {
 
-                            Task task = tableView.getSelectionModel().getSelectedItem();
-                            taskService.deleteTask(task.getId());
-                            refreshTable();
+                            Task task = toDoTableView.getSelectionModel().getSelectedItem();
+                            taskList.remove(task);
+                            toDoTableView.setItems(taskList);
+                            doneTaskList.add(task);
+                            if (!doneTaskList.isEmpty()){
+                                toDoTableView1.setItems(doneTaskList);
+                            }
+                            //taskService.deleteTask(task.getId());
+                            //refreshTable();
                             totalTask.setText(String.valueOf(taskList.size()));
                         });
 
+
                         editIcon.setOnMouseClicked((MouseEvent event) -> {
-                            Task task = tableView.getSelectionModel().getSelectedItem();
+                            Task task = toDoTableView.getSelectionModel().getSelectedItem();
                             //   AddStudentController addStudentController = loader.getController();
                             //    addStudentController.setUpdate(true);
 //                            addStudentController.setTextField(student.getId(), student.getName(),
@@ -230,7 +232,7 @@ public class Controller2 implements Initializable {
 
                         });
 
-                        HBox managebtn = new HBox(editIcon, deleteIcon);
+                        HBox managebtn = new HBox( editIcon, deleteIcon);
                         managebtn.setStyle("-fx-alignment:center");
                         HBox.setMargin(deleteIcon, new Insets(2, 2, 0, 3));
                         HBox.setMargin(editIcon, new Insets(2, 3, 0, 2));
@@ -247,8 +249,78 @@ public class Controller2 implements Initializable {
             return cell;
         };
         editCol.setCellFactory(cellFactory);
-        tableView.getStyleClass().add("noheader");
-        tableView.setItems(taskList);
+        shortDescColumn1.setCellValueFactory(new PropertyValueFactory<Task, String>("shortDesc"));
+
+        Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory1 = (TableColumn<Task, String> param) -> {
+            final TableCell<Task, String> cell = new TableCell<>() {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    //that cell created only on non-empty rows
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+
+                    } else {
+
+                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+
+                        deleteIcon.setStyle(
+                                " -fx-cursor: hand ;"
+                                        + "-glyph-size:28px;"
+                                        + "-fx-fill:#ff1744;"
+                        );
+
+                        deleteIcon.setOnMouseClicked((MouseEvent event) -> {
+                            Stage dialog = new Stage();
+                            dialog.initModality(Modality.APPLICATION_MODAL);
+                            //   dialog.initOwner(primaryStage);
+                            VBox dialogVbox = new VBox(20);
+                            HBox hbox = new HBox(10);
+                            dialogVbox.getChildren().add(new Label("Do you want to permanently delete task?"));
+                            Button yesButton = new Button("Yes");
+                            Button noButton = new Button("No");
+                            hbox.getChildren().add(yesButton);
+                            hbox.getChildren().add(noButton);
+                            dialogVbox.getChildren().add(hbox);
+                            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                            dialog.setScene(dialogScene);
+                            dialog.show();
+                            yesButton.setOnMouseClicked((MouseEvent event1) -> {
+                                Task task = toDoTableView1.getSelectionModel().getSelectedItem();
+                                doneTaskList.remove(task);
+                                toDoTableView1.setItems(doneTaskList);
+                                taskService.deleteTask(task.getId());
+                                //refreshTable();
+                                totalTask.setText(String.valueOf(taskList.size()));
+                                dialog.close();
+                            });
+                            noButton.setOnMouseClicked((MouseEvent event2) -> {
+                                dialog.close();
+                            });
+
+
+                        });
+
+
+                        HBox managebtn = new HBox(deleteIcon);
+                        managebtn.setStyle("-fx-alignment:center");
+                        HBox.setMargin(deleteIcon, new Insets(2, 2, 0, 3));
+                        setGraphic(managebtn);
+
+                        setText(null);
+
+                    }
+                }
+
+            };
+
+            return cell;
+        };
+        editCol1.setCellFactory(cellFactory1);
+        toDoTableView.getStyleClass().add("noheader");
+        toDoTableView.setItems(taskList);
+        toDoTableView1.setItems(doneTaskList);
 //
 //        Parent parent = new FXMLLoader().load(getClass().getResource("/test.fxml"));
 //        Stage stage = new Stage();
@@ -280,7 +352,7 @@ public class Controller2 implements Initializable {
     private void refreshTable() {
         taskList.clear();
         taskList = FXCollections.observableList(taskService.getTasks());
-        tableView.setItems(taskList);
+        toDoTableView.setItems(taskList);
     }
 
     public void handleClicks(ActionEvent actionEvent) {
@@ -300,7 +372,7 @@ public class Controller2 implements Initializable {
             pnlOrders.setStyle("-fx-background-color : #464F67");
             pnlOrders.toFront();
         }
-        if (actionEvent.getSource() == tableView.getSelectionModel()) {
+        if (actionEvent.getSource() == toDoTableView.getSelectionModel()) {
             final Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
             //   dialog.initOwner(primaryStage);
