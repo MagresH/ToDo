@@ -1,7 +1,10 @@
 package com.urz.oproject.controller;
 
 
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXNodesList;
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.JFXTreeTableView;
 import com.urz.oproject.model.Task;
 import com.urz.oproject.service.TaskService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -31,6 +34,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,7 +42,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-@Component
+@Controller
 public class Controller2 implements Initializable {
 
     private final TaskService taskService;
@@ -89,7 +93,7 @@ public class Controller2 implements Initializable {
     TableColumn<Task, String> shortDescColumn;
     @FXML
     TableColumn<Task, String> longDesc;
-//    @FXML
+    //    @FXML
 //    TableColumn<Task, Boolean> taskStatus;
 //    @FXML
 //    TableColumn<Task, Boolean> importantStatus;
@@ -144,23 +148,19 @@ public class Controller2 implements Initializable {
         taskService.addTask(new Task("test55", "test long", false, false));
         taskService.addTask(new Task(6L, "test", "test long", false, false));
         taskService.addTask(new Task.TaskBuilder().shortDesc("test builder").longDesc("long test").taskStatus(true).importantStatus(false).build());
+
         taskList = FXCollections.observableList(taskService.getTasks());
+
         totalTask.setText(String.valueOf(taskList.size()));
+
         filteredList = new FilteredList<>(taskList, p -> true);
         System.out.println(filteredList);
         listView.setItems(filteredList);
 
-        Task test = taskList.get(1);
-
-        idColumn.setCellValueFactory(new PropertyValueFactory<Task, Long>("id"));
         shortDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("shortDesc"));
-        longDesc.setCellValueFactory(new PropertyValueFactory<Task, String>("longDesc"));
-      //  taskStatus.setCellValueFactory(new PropertyValueFactory<Task, Boolean>("taskStatus"));
-       // importantStatus.setCellValueFactory(new PropertyValueFactory<Task, Boolean>("importantStatus"));
 
         Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory = (TableColumn<Task, String> param) -> {
-            // make cell containing buttons
-            final TableCell<Task, String> cell = new TableCell<Task, String>() {
+            final TableCell<Task, String> cell = new TableCell<>() {
                 @Override
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
@@ -170,8 +170,8 @@ public class Controller2 implements Initializable {
                         setText(null);
 
                     } else {
-
-                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+                        CheckBox checkBox = new CheckBox();
+                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK);
                         FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE);
 
                         deleteIcon.setStyle(
@@ -184,7 +184,28 @@ public class Controller2 implements Initializable {
                                         + "-glyph-size:28px;"
                                         + "-fx-fill:#00E676;"
                         );
+
+                        tableView.setOnMouseClicked((MouseEvent event) -> {
+                            Task selectedTask = tableView.getSelectionModel().getSelectedItem();
+                            if (selectedTask != null) {
+                                if (event.getClickCount() == 2) //Checking double click
+                                {
+                                    Stage dialog = new Stage();
+                                    dialog.initModality(Modality.APPLICATION_MODAL);
+                                    //   dialog.initOwner(primaryStage);
+                                    VBox dialogVbox = new VBox(20);
+                                    Label label = new Label(selectedTask.getLongDesc());
+                                    dialogVbox.getChildren().add(label);
+                                    Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                                    dialog.setScene(dialogScene);
+                                    dialog.show();
+                                    System.out.println("You clicked on " + tableView.getSelectionModel().getSelectedItem().getShortDesc());
+
+                                }
+                            }
+                        });
                         deleteIcon.setOnMouseClicked((MouseEvent event) -> {
+
                             Task task = tableView.getSelectionModel().getSelectedItem();
                             taskService.deleteTask(task.getId());
                             refreshTable();
@@ -193,19 +214,18 @@ public class Controller2 implements Initializable {
 
                         editIcon.setOnMouseClicked((MouseEvent event) -> {
                             Task task = tableView.getSelectionModel().getSelectedItem();
-                         //   AddStudentController addStudentController = loader.getController();
-                        //    addStudentController.setUpdate(true);
+                            //   AddStudentController addStudentController = loader.getController();
+                            //    addStudentController.setUpdate(true);
 //                            addStudentController.setTextField(student.getId(), student.getName(),
 //                                    student.getBirth().toLocalDate(), student.getAdress(), student.getEmail());
-                            final Stage dialog = new Stage();
+                            Stage dialog = new Stage();
                             dialog.initModality(Modality.APPLICATION_MODAL);
-                         //   dialog.initOwner(primaryStage);
+                            //   dialog.initOwner(primaryStage);
                             VBox dialogVbox = new VBox(20);
                             dialogVbox.getChildren().add(new Text("This is a Dialog"));
                             Scene dialogScene = new Scene(dialogVbox, 300, 200);
                             dialog.setScene(dialogScene);
                             dialog.show();
-
 
 
                         });
@@ -229,9 +249,14 @@ public class Controller2 implements Initializable {
         editCol.setCellFactory(cellFactory);
         tableView.getStyleClass().add("noheader");
         tableView.setItems(taskList);
+//
+//        Parent parent = new FXMLLoader().load(getClass().getResource("/test.fxml"));
+//        Stage stage = new Stage();
+//        stage.setScene(new Scene(parent));
+//        stage.initStyle(StageStyle.UTILITY);
+//        stage.show();
 
-
-        tableView.getSelectionModel().getSelectedItem().getLongDesc();
+        //tableView.getSelectionModel().getSelectedItem().getLongDesc();
 
 //        Node[] nodes = new Node[taskService.getTasks().size()];
 //        for (int i = 0; i < taskService.getTasks().size(); i++) {
@@ -274,6 +299,16 @@ public class Controller2 implements Initializable {
         if (actionEvent.getSource() == btnOrders) {
             pnlOrders.setStyle("-fx-background-color : #464F67");
             pnlOrders.toFront();
+        }
+        if (actionEvent.getSource() == tableView.getSelectionModel()) {
+            final Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            //   dialog.initOwner(primaryStage);
+            VBox dialogVbox = new VBox(20);
+            dialogVbox.getChildren().add(new Text("This is a Dialog"));
+            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+            dialog.setScene(dialogScene);
+            dialog.show();
         }
     }
 }

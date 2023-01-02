@@ -125,12 +125,8 @@
                <children>
                   <TableView fx:id="tableView" layoutX="22.0" layoutY="189.0" prefHeight="497.0" prefWidth="755.0">
                      <columns>
-                        <TableColumn fx:id="idColumn" prefWidth="75.0" text="id" />
-                        <TableColumn fx:id="shortDescColumn" prefWidth="157.60003662109375" text="shortDesc" />
-                        <TableColumn fx:id="longDesc" prefWidth="115.20004272460938" text="longDesc" />
-                        <TableColumn fx:id="taskStatus" prefWidth="182.4000244140625" text="taskStatus" />
-                        <TableColumn fx:id="importantStatus" prefWidth="136.7999267578125" text="importantStatus" />
-                        <TableColumn fx:id="editCol" prefWidth="75.0" text="Column X" />
+                        <TableColumn fx:id="shortDescColumn" prefWidth="672.0" text="shortDesc" />
+                        <TableColumn fx:id="editCol" prefWidth="82.39996337890625" text="Column X" />
                      </columns>
                   </TableView>
                   <VBox fx:id="pnItems" layoutX="9.0" layoutY="176.0" prefHeight="515.0" prefWidth="762.0" spacing="5.0" style="-fx-background-color: #F4FFF8;" visible="false">

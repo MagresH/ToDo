@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.urz.oproject.tableView;
+package com.urz.oproject.controller;
 
-import com.urz.oproject.controller.AddStudentController;
 import com.urz.oproject.helpers.DbConnect;
 import com.urz.oproject.models.Student;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -98,18 +97,18 @@ public class TableViewController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(TableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     @FXML
     private void refreshTable() {
         try {
             StudentList.clear();
-            
+
             query = "SELECT * FROM `student`";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
-            
+
             while (resultSet.next()){
                 StudentList.add(new  Student(
                         resultSet.getInt("id"),
@@ -118,16 +117,16 @@ public class TableViewController implements Initializable {
                         resultSet.getString("adress"),
                         resultSet.getString("email")));
                 studentsTable.setItems(StudentList);
-                
+
             }
-            
-            
+
+
         } catch (SQLException ex) {
             Logger.getLogger(TableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+
+
+
     }
 
     @FXML
@@ -135,17 +134,17 @@ public class TableViewController implements Initializable {
     }
 
     private void loadDate() {
-        
+
         connection = DbConnect.getConnect();
         refreshTable();
-        
+
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         birthCol.setCellValueFactory(new PropertyValueFactory<>("birth"));
         adressCol.setCellValueFactory(new PropertyValueFactory<>("adress"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        
-        //add cell of button edit 
+
+        //add cell of button edit
          Callback<TableColumn<Student, String>, TableCell<Student, String>> cellFoctory = (TableColumn<Student, String> param) -> {
             // make cell containing buttons
             final TableCell<Student, String> cell = new TableCell<Student, String>() {
@@ -173,7 +172,7 @@ public class TableViewController implements Initializable {
                                 + "-fx-fill:#00E676;"
                         );
                         deleteIcon.setOnMouseClicked((MouseEvent event) -> {
-                            
+
                             try {
                                 student = studentsTable.getSelectionModel().getSelectedItem();
                                 query = "DELETE FROM `student` WHERE id  ="+student.getId();
@@ -181,18 +180,18 @@ public class TableViewController implements Initializable {
                                 preparedStatement = connection.prepareStatement(query);
                                 preparedStatement.execute();
                                 refreshTable();
-                                
+
                             } catch (SQLException ex) {
                                 Logger.getLogger(TableViewController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
-                           
 
-                          
+
+
+
 
                         });
                         editIcon.setOnMouseClicked((MouseEvent event) -> {
-                            
+
                             student = studentsTable.getSelectionModel().getSelectedItem();
                             FXMLLoader loader = new FXMLLoader ();
                             try {
@@ -215,9 +214,9 @@ public class TableViewController implements Initializable {
                             stage.setScene(new Scene(parent));
                             stage.initStyle(StageStyle.UTILITY);
                             stage.show();
-                            
 
-                           
+
+
 
                         });
 
@@ -239,8 +238,8 @@ public class TableViewController implements Initializable {
         };
          editCol.setCellFactory(cellFoctory);
          studentsTable.setItems(StudentList);
-         
-         
+
+
     }
     
 }
