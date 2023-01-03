@@ -28,7 +28,7 @@
       <URL value="@tableview.css" />
    </stylesheets>
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="576.0" prefWidth="256.0" style="-fx-background-color: #1C3738;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" prefHeight="702.0" prefWidth="256.0" style="-fx-background-color: #1C3738;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="btnOverview" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="69.0" prefWidth="256.0" stylesheets="@style.css" text="Today" textFill="#325f61">
                <graphic>
@@ -101,7 +101,7 @@
             <DropShadow blurType="ONE_PASS_BOX" radius="4.75" width="0.0" />
          </effect>
       </VBox>
-      <StackPane layoutX="258.0" prefHeight="702.0" prefWidth="794.0" style="-fx-background-color: #F4FFF8;">
+      <StackPane layoutX="258.0" prefHeight="702.0" prefWidth="794.0" style="-fx-background-color: #F4FFF8;" AnchorPane.bottomAnchor="-0.39999999999997726" AnchorPane.leftAnchor="258.0000000000001" AnchorPane.rightAnchor="-2.400000000000091" AnchorPane.topAnchor="0.0">
          <children>
             <Pane fx:id="pnlCustomer" prefHeight="200.0" prefWidth="200.0" />
             <Pane fx:id="pnlOrders" prefHeight="200.0" prefWidth="200.0">
@@ -109,7 +109,7 @@
                   <ListView fx:id="listView" prefHeight="702.0" prefWidth="794.0" />
                </children></Pane>
             <Pane fx:id="pnlMenus" prefHeight="200.0" prefWidth="200.0" />
-            <Pane fx:id="pnlOverview" prefHeight="567.0" prefWidth="794.0">
+            <Pane fx:id="pnlOverview">
                <children>
                   <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="9.0" layoutY="186.0" prefHeight="264.0" prefWidth="780.0">
                      <columns>
@@ -199,6 +199,25 @@
             </Pane>
          </children>
       </StackPane>
+      <VBox alignment="BOTTOM_CENTER" layoutY="460.0" prefHeight="243.0" prefWidth="256.0" style="-fx-background-color: #1C3738;" visible="false">
+         <children>
+            <Button fx:id="btnOrders1" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" onAction="#handleClicks" opacity="0.68" prefHeight="61.0" prefWidth="245.0" style="-fx-background-color: #F4FFF8; -fx-text-fill: black;" stylesheets="@style.css" text="Add task">
+               <graphic>
+                  <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/icons8_Open_Envelope_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
    </children>
    <effect>
       <DropShadow color="#1b1eeb" />

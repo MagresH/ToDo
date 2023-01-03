@@ -155,14 +155,13 @@ public class Controller2 implements Initializable {
 
         //  listView.setItems(taskList);
 
-        shortDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("shortDesc"));
+        shortDescColumn.setCellValueFactory(new PropertyValueFactory<>("shortDesc"));
 
         Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory = (TableColumn<Task, String> param) -> {
             final TableCell<Task, String> cell = new TableCell<>() {
                 @Override
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
-                    //that cell created only on non-empty rows
                     if (empty) {
                         setGraphic(null);
                         setText(null);

@@ -39,7 +39,7 @@ public class StageInitializer implements ApplicationListener<ToDoApplication.Sta
             stage.setScene(new Scene(parent));
             //set stage borderless
            // stage.initStyle(StageStyle.UNDECORATED);
-            stage.setResizable(false);
+            //stage.setResizable(false);
             //drag it here
             parent.setOnMousePressed(eventL -> {
                 x = eventL.getSceneX();
