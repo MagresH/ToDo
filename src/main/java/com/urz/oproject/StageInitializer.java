@@ -37,6 +37,9 @@ public class StageInitializer implements ApplicationListener<ToDoApplication.Sta
             Stage stage = event.getStage();
             stage.setTitle(applicationTitle);
             stage.setScene(new Scene(parent));
+            stage.sizeToScene();
+            stage.setMinWidth(1070);
+            stage.setMinHeight(800);
             //set stage borderless
            // stage.initStyle(StageStyle.UNDECORATED);
             //stage.setResizable(false);

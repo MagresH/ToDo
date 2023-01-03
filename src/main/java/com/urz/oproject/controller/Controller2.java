@@ -43,6 +43,11 @@ public class Controller2 implements Initializable {
     private Button btnOverview;
     @FXML
     private Label totalTask;
+    @FXML
+    private Label completedTask;
+    @FXML
+    private Label toDoTask;
+
 
     private FilteredList<Task> filteredList;
     @FXML
@@ -114,35 +119,9 @@ public class Controller2 implements Initializable {
         pnlOverview.setStyle("-fx-background-color : white");
         pnlOverview.toFront();
 
-        taskService.addTask(new Task("test1", "test long", false, false));
-        taskService.addTask(new Task("test2", "test long", false, false));
-        taskService.addTask(new Task("test3", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("te4st", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("tes5t", "test long", false, false));
-        taskService.addTask(new Task("te4st", "test long", false, false));
-        taskService.addTask(new Task("tefst", "test long", false, false));
-        taskService.addTask(new Task("tefgst", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("teghst", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("tes5t", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test", "test long", false, false));
-        taskService.addTask(new Task("test5", "test long", false, false));
-        taskService.addTask(new Task("test3", "test long", false, false));
-        taskService.addTask(new Task("test1", "test long", false, false));
-        taskService.addTask(new Task("test35", "test long", false, false));
-        taskService.addTask(new Task("test531", "test long", false, false));
-        taskService.addTask(new Task("test55", "test long", false, false));
+        taskService.addTask(new Task("Visit John", "test long", false, false));
+        taskService.addTask(new Task("Schedule haircut", "test long", false, false));
+        taskService.addTask(new Task("Cat food", "test long", false, false));
         taskService.addTask(new Task(6L, "test", "test long", false, false));
         taskService.addTask(new Task.TaskBuilder().shortDesc("test builder").longDesc("long test").taskStatus(true).importantStatus(false).build());
 
@@ -151,11 +130,10 @@ public class Controller2 implements Initializable {
         doneTaskList.clear();
 
 
-        totalTask.setText(String.valueOf(taskList.size()));
-
-        //  listView.setItems(taskList);
+        totalTask.setText(String.valueOf(taskService.getTasks().size()));
 
         shortDescColumn.setCellValueFactory(new PropertyValueFactory<>("shortDesc"));
+        longDesc.setCellValueFactory(new PropertyValueFactory<>("longDesc"));
 
         Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory = (TableColumn<Task, String> param) -> {
             final TableCell<Task, String> cell = new TableCell<>() {
@@ -166,8 +144,8 @@ public class Controller2 implements Initializable {
                         setGraphic(null);
                         setText(null);
                     } else {
-                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK);
-                        FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE);
+                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK_SQUARE_ALT);
+                        FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE_ALT);
                         deleteIcon.setStyle(
                                 " -fx-cursor: hand ;"
                                         + "-glyph-size:28px;"
@@ -204,12 +182,14 @@ public class Controller2 implements Initializable {
                             taskList.remove(task);
                             toDoTableView.setItems(taskList);
                             doneTaskList.add(task);
+                            completedTask.setText(String.valueOf(doneTaskList.size()));
+                            toDoTask.setText(String.valueOf(taskList.size()));
                             if (!doneTaskList.isEmpty()){
                                 toDoTableView1.setItems(doneTaskList);
                             }
                             //taskService.deleteTask(task.getId());
                             //refreshTable();
-                            totalTask.setText(String.valueOf(taskList.size()));
+
                         });
 
 
@@ -262,7 +242,7 @@ public class Controller2 implements Initializable {
 
                     } else {
 
-                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+                        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK_SQUARE);
 
                         deleteIcon.setStyle(
                                 " -fx-cursor: hand ;"
@@ -290,8 +270,10 @@ public class Controller2 implements Initializable {
                                 doneTaskList.remove(task);
                                 toDoTableView1.setItems(doneTaskList);
                                 taskService.deleteTask(task.getId());
-                                //refreshTable();
-                                totalTask.setText(String.valueOf(taskList.size()));
+                                totalTask.setText(String.valueOf(taskService.getTasks().size()));
+                                toDoTask.setText(String.valueOf(taskList.size()));
+
+                                // totalTask.setText(String.valueOf(taskList.size()));
                                 dialog.close();
                             });
                             noButton.setOnMouseClicked((MouseEvent event2) -> {
@@ -317,34 +299,11 @@ public class Controller2 implements Initializable {
             return cell;
         };
         editCol1.setCellFactory(cellFactory1);
+        toDoTableView1.getStyleClass().add("noheader");
         toDoTableView.getStyleClass().add("noheader");
         toDoTableView.setItems(taskList);
         toDoTableView1.setItems(doneTaskList);
-//
-//        Parent parent = new FXMLLoader().load(getClass().getResource("/test.fxml"));
-//        Stage stage = new Stage();
-//        stage.setScene(new Scene(parent));
-//        stage.initStyle(StageStyle.UTILITY);
-//        stage.show();
 
-        //tableView.getSelectionModel().getSelectedItem().getLongDesc();
-
-//        Node[] nodes = new Node[taskService.getTasks().size()];
-//        for (int i = 0; i < taskService.getTasks().size(); i++) {
-//            Item item = new Item(taskService.getTasks().get(i).getShortDesc());
-//            if (item.getShortText() == null) System.out.println("nie dziala");
-//            else {
-//                System.out.println("DZIALA");
-//                System.out.println("opis zadania: " + item.getShortText());
-//            }
-//            nodes[i] = item;
-//
-//            // nodes[i] = FXMLLoader.load(getClass().getResource("/Item.fxml"));
-//            pnItems.getChildren().add(nodes[i]);
-//        }
-//        List<Node> list = Arrays.asList(nodes);
-//        ObservableList<Node> lista = FXCollections.observableList(list);
-        // listView.setItems(lista);
     }
 
     @FXML
@@ -357,6 +316,7 @@ public class Controller2 implements Initializable {
     public void handleClicks(ActionEvent actionEvent) {
         if (actionEvent.getSource() == btnCustomers) {
             pnlCustomer.setStyle("-fx-background-color : white");
+            System.out.println("dupa");
             pnlCustomer.toFront();
         }
         if (actionEvent.getSource() == btnMenus) {
@@ -371,15 +331,6 @@ public class Controller2 implements Initializable {
             pnlOrders.setStyle("-fx-background-color : #464F67");
             pnlOrders.toFront();
         }
-        if (actionEvent.getSource() == toDoTableView.getSelectionModel()) {
-            final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            //   dialog.initOwner(primaryStage);
-            VBox dialogVbox = new VBox(20);
-            dialogVbox.getChildren().add(new Text("This is a Dialog"));
-            Scene dialogScene = new Scene(dialogVbox, 300, 200);
-            dialog.setScene(dialogScene);
-            dialog.show();
-        }
+
     }
 }
