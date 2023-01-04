@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1050.0" style="-fx-background-color: #325f61;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.urz.oproject.controller.ToDoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1050.0" style="-fx-background-color: #325f61;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.urz.oproject.controller.ToDoController">
    <stylesheets>
       <URL value="@tableview.css" />
    </stylesheets>
@@ -103,7 +103,7 @@
                      <children>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Label fx:id="totalTask" text="0" textFill="#2a73ff">
+                              <Label fx:id="totalTaskLabel" text="0" textFill="#2a73ff">
                                  <font>
                                     <Font name="System Bold" size="26.0" />
                                  </font>
@@ -113,7 +113,7 @@
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Label fx:id="completedTask" text="0" textFill="#26bfbc">
+                              <Label fx:id="completedTaskLabel" text="0" textFill="#26bfbc">
                                  <font>
                                     <Font name="System Bold" size="26.0" />
                                  </font>
@@ -135,18 +135,18 @@
                   </HBox>
                   <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="4.0" layoutY="167.0" prefHeight="353.0" prefWidth="786.0" style="-fx-background-color: white;" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="167.0">
                      <columns>
-                        <TableColumn fx:id="shortDescColumn" prefWidth="629.0" text="shortDesc" />
+                        <TableColumn fx:id="toDoDescColumn" prefWidth="629.0" text="shortDesc" />
                         <TableColumn fx:id="longDesc" prefWidth="75.0" text="Column X" />
-                        <TableColumn fx:id="editCol" prefWidth="126.0" text="Column X" />
+                        <TableColumn fx:id="toDoCustomColumn" prefWidth="126.0" text="Column X" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <TableView fx:id="toDoTableView1" fixedCellSize="60.0" layoutY="553.0" prefHeight="149.0" prefWidth="786.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="553.0">
+                  <TableView fx:id="doneTableView" fixedCellSize="60.0" layoutY="553.0" prefHeight="149.0" prefWidth="786.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="553.0">
                      <columns>
-                        <TableColumn fx:id="shortDescColumn1" prefWidth="629.0" text="shortDesc" />
-                        <TableColumn fx:id="editCol1" prefWidth="126.0" text="Column X" />
+                        <TableColumn fx:id="doneDescColumn" prefWidth="629.0" text="shortDesc" />
+                        <TableColumn fx:id="doneCustomColumn" prefWidth="126.0" text="Column X" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -169,8 +169,8 @@
                <children>
                   <TableView fx:id="trashTableView" fixedCellSize="60.0" layoutX="18.0" layoutY="14.0" prefHeight="670.0" prefWidth="758.0">
                      <columns>
-                        <TableColumn fx:id="shortDescColumn11" prefWidth="629.0" text="shortDesc" />
-                        <TableColumn fx:id="editCol11" prefWidth="126.0" text="Column X" />
+                        <TableColumn fx:id="trashDescColumn" prefWidth="629.0" text="shortDesc" />
+                        <TableColumn fx:id="trashCustomColumn" prefWidth="126.0" text="Column X" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
