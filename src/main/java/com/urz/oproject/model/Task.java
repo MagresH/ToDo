@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,13 +19,15 @@ public class Task implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "short_desc", nullable = false)
-    private String shortDesc;
+    @Column(name = "description", nullable = false)
+    private String description;
+//
+//    @Lob
+//    @Column(name = "long_desc")
+//    private String longDesc;
 
-    @Lob
-    @Column(name = "long_desc")
-    private String longDesc;
-
+    @Column(name = "dead_line_date")
+    private LocalDate deadLineDate;
     @Column(name = "task_status", nullable = false)
     private boolean taskStatus;
 
@@ -34,13 +37,13 @@ public class Task implements Serializable {
     @ManyToOne
     AppUser appUser;
 
-    public Task(String shortDesc, String longDesc, boolean taskStatus, boolean importantStatus) {
-        this.shortDesc = shortDesc;
-        this.longDesc = longDesc;
+    public Task(String description, LocalDate deadLineDate, boolean taskStatus, boolean importantStatus, AppUser appUser) {
+        this.description = description;
+        this.deadLineDate = deadLineDate;
         this.taskStatus = taskStatus;
         this.importantStatus = importantStatus;
+        this.appUser = appUser;
     }
-
 //    public static TaskBuilder builder() {
 //        return new TaskBuilder();
 //    }

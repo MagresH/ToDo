@@ -1,8 +1,9 @@
 package com.urz.oproject.controller;
 
 
-import com.urz.oproject.ToDoApplication;
+import com.urz.oproject.model.AppUser;
 import com.urz.oproject.model.Task;
+import com.urz.oproject.repository.TaskRepository;
 import com.urz.oproject.service.TaskService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -13,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -23,18 +23,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Controller;
-import com.urz.oproject.ToDoApplication.StageReadyEvent;
+
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -54,14 +53,20 @@ public class ToDoController implements Initializable {
     @FXML
     private TableColumn<Task, String> toDoDescColumn, doneDescColumn, toDoCustomColumn, doneCustomColumn, trashDescColumn, trashCustomColumn;
     @FXML
+    private TableColumn<Task, LocalDate> deadLineDateColumn;
+    @FXML
     private ObservableList<Task> toDoTaskList, doneTaskList;
 
     private final TaskService taskService;
     private final ApplicationContext applicationContext;
+    private final TaskRepository taskRepository;
+
     @Autowired
-    public ToDoController(TaskService taskService, ApplicationContext applicationContext) {
+    public ToDoController(TaskService taskService, ApplicationContext applicationContext,
+                          TaskRepository taskRepository) {
         this.taskService = taskService;
         this.applicationContext = applicationContext;
+        this.taskRepository = taskRepository;
     }
 
     @SneakyThrows
@@ -72,6 +77,7 @@ public class ToDoController implements Initializable {
         pnlOverview.toFront();
 
         toDoTaskList = FXCollections.observableList(taskService.getTasks());
+//        toDoTaskList = FXCollections.observableList(taskService.getTasks());
         doneTaskList = FXCollections.observableList(new ArrayList<>());
 
         totalTaskLabel.setText(String.valueOf(taskService.getTasks().size()));
@@ -101,12 +107,12 @@ public class ToDoController implements Initializable {
                                     Stage dialog = new Stage();
                                     dialog.initModality(Modality.APPLICATION_MODAL);
                                     VBox dialogVbox = new VBox(20);
-                                    Label label = new Label(selectedTask.getLongDesc());
+                                    Label label = new Label(selectedTask.getDescription());
                                     dialogVbox.getChildren().add(label);
                                     Scene dialogScene = new Scene(dialogVbox, 300, 200);
                                     dialog.setScene(dialogScene);
                                     dialog.show();
-                                    System.out.println("You clicked on " + toDoTableView.getSelectionModel().getSelectedItem().getShortDesc());
+                                    System.out.println("You clicked on " + toDoTableView.getSelectionModel().getSelectedItem().getDescription());
 
                                 }
                             }
@@ -124,7 +130,21 @@ public class ToDoController implements Initializable {
                         });
 
                         editIcon.setOnMouseClicked((MouseEvent event) -> {
-
+                            Task task = toDoTableView.getSelectionModel().getSelectedItem();
+                            taskService.setSelectedTask(task);
+                            try {
+                                Stage stage = new Stage();
+                                FXMLLoader fxmlLoader = new FXMLLoader();
+                                fxmlLoader.setControllerFactory(applicationContext::getBean);
+                                fxmlLoader.setLocation(getClass().getResource("/EditTask.fxml"));
+                                AnchorPane root = fxmlLoader.load();
+                                stage.setTitle("Sample app");
+                                Scene scene = new Scene(root);
+                                stage.setScene(scene);
+                                stage.show();
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
 
 //                            Task task = toDoTableView.getSelectionModel().getSelectedItem();
 //                            Stage dialog = new Stage();
@@ -149,7 +169,8 @@ public class ToDoController implements Initializable {
             };
             return cell;
         };
-        toDoDescColumn.setCellValueFactory(new PropertyValueFactory<>("shortDesc"));
+        toDoDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        deadLineDateColumn.setCellValueFactory(new PropertyValueFactory<>("deadLineDate"));
         toDoCustomColumn.setCellFactory(cellFactory);
 
 

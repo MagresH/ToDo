@@ -136,7 +136,7 @@
                   <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="4.0" layoutY="167.0" prefHeight="353.0" prefWidth="786.0" style="-fx-background-color: white;" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="167.0">
                      <columns>
                         <TableColumn fx:id="toDoDescColumn" prefWidth="629.0" text="shortDesc" />
-                        <TableColumn fx:id="longDesc" prefWidth="75.0" text="Column X" />
+                        <TableColumn fx:id="deadLineDateColumn" prefWidth="75.0" text="Column X" />
                         <TableColumn fx:id="toDoCustomColumn" prefWidth="126.0" text="Column X" />
                      </columns>
                      <columnResizePolicy>

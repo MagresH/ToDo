@@ -4,6 +4,8 @@ import com.urz.oproject.model.AppUser;
 import com.urz.oproject.model.Task;
 import com.urz.oproject.repository.TaskRepository;
 import javafx.collections.ObservableList;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import java.util.List;
 @Service
 public class TaskService {
 
+    @Getter
+    @Setter
+    private Task selectedTask;
     private final TaskRepository taskRepository;
 
     @Autowired
@@ -21,8 +26,11 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
+//    public List<Task> getTasks(){
+//        return taskRepository.findAll();
+//    }
     public List<Task> getTasks(){
-        return taskRepository.findAll();
+        return taskRepository.findTasksByAppUser(UserService.loggedUser).get();
     }
     public Task addTask(Task task) {
         return taskRepository.save(task);
@@ -32,4 +40,6 @@ public class TaskService {
     public void deleteTask(Long id) {
         taskRepository.deleteTaskById(id);
     }
+
+
 }

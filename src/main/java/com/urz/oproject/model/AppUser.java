@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name="\"AppUser\"")
+@Table(name="AppUser")
 @Builder
 public class AppUser implements Serializable {
     @Id
@@ -23,10 +23,19 @@ public class AppUser implements Serializable {
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
     @GeneratedValue(strategy = SEQUENCE, generator = "user_sequence")
     private Long id;
-
     @Column
     private String name;
 
+    @Column
+    private String password;
+
+    public AppUser(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+
     @OneToMany(mappedBy = "appUser")
     private List<Task> tasks;
+
+
 }
