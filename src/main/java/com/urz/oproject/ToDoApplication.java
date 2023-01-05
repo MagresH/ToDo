@@ -26,9 +26,12 @@ public class ToDoApplication extends Application {
         applicationContext.close();
         Platform.exit();
     }
-    static class StageReadyEvent extends ApplicationEvent {
+    public class StageReadyEvent extends ApplicationEvent {
         public StageReadyEvent(Stage stage) {
             super(stage);
+        }
+        public ConfigurableApplicationContext getAppContext(){
+            return applicationContext;
         }
         public Stage getStage() {
             return (Stage) getSource();

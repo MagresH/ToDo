@@ -30,7 +30,7 @@ public class DataInitializer {
         taskService.addTask(new Task("Schedule haircut", "test long", false, false));
         taskService.addTask(new Task("Schedule haircut", "test long", false, false));
         taskService.addTask(new Task("Cat food", "test long", false, false));
-        taskService.addTask(new Task(6L, "test", "test long", false, false));
+       // taskService.addTask(new Task(6L, "test", "test long", false, false));
        // taskService.addTask(new Task.TaskBuilder().shortDesc("test builder").longDesc("long test").taskStatus(true).importantStatus(false).build());
 
     }
