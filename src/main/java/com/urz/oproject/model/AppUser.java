@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -14,7 +15,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name="\"User\"")
+@Table(name="\"AppUser\"")
 @Builder
 public class AppUser implements Serializable {
     @Id
@@ -26,4 +27,6 @@ public class AppUser implements Serializable {
     @Column
     private String name;
 
+    @OneToMany(mappedBy = "appUser")
+    private List<Task> tasks;
 }

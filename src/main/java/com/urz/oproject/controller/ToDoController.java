@@ -1,6 +1,7 @@
 package com.urz.oproject.controller;
 
 
+import com.urz.oproject.ToDoApplication;
 import com.urz.oproject.model.Task;
 import com.urz.oproject.service.TaskService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -9,8 +10,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -26,8 +29,11 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Controller;
-
+import com.urz.oproject.ToDoApplication.StageReadyEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -35,6 +41,8 @@ import java.util.ResourceBundle;
 @Controller
 public class ToDoController implements Initializable {
 
+    @FXML
+    AnchorPane anchorPane;
     @FXML
     private Label totalTaskLabel, completedTaskLabel, toDoTask;
     @FXML
@@ -49,10 +57,11 @@ public class ToDoController implements Initializable {
     private ObservableList<Task> toDoTaskList, doneTaskList;
 
     private final TaskService taskService;
-
+    private final ApplicationContext applicationContext;
     @Autowired
-    public ToDoController(TaskService taskService) {
+    public ToDoController(TaskService taskService, ApplicationContext applicationContext) {
         this.taskService = taskService;
+        this.applicationContext = applicationContext;
     }
 
     @SneakyThrows
@@ -115,14 +124,18 @@ public class ToDoController implements Initializable {
                         });
 
                         editIcon.setOnMouseClicked((MouseEvent event) -> {
-                            Task task = toDoTableView.getSelectionModel().getSelectedItem();
-                            Stage dialog = new Stage();
-                            dialog.initModality(Modality.APPLICATION_MODAL);
-                            VBox dialogVbox = new VBox(20);
-                            dialogVbox.getChildren().add(new Text("Change task"));
-                            Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                            dialog.setScene(dialogScene);
-                            dialog.show();
+
+
+//                            Task task = toDoTableView.getSelectionModel().getSelectedItem();
+//                            Stage dialog = new Stage();
+//                            dialog.initModality(Modality.APPLICATION_MODAL);
+//                            VBox dialogVbox = new VBox(20);
+//                            dialogVbox.getChildren().add(new Text("Change task"));
+//                            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+//                            dialog.setScene(dialogScene);
+//                            dialog.show();
+
+
                         });
 
                         HBox managebtn = new HBox(editIcon, checkIcon);
@@ -266,7 +279,23 @@ public class ToDoController implements Initializable {
         doneTableView.setItems(doneTaskList);
 
     }
-
+    @FXML
+    void addNoweOknoClicked(ActionEvent event) {
+        System.out.println("test");
+        try {
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            fxmlLoader.setLocation(getClass().getResource("/EditTask.fxml"));
+            AnchorPane root = fxmlLoader.load();
+            stage.setTitle("Sample app");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
     public void handleClicks(ActionEvent actionEvent) {
 
         if (actionEvent.getSource() == btnOverview) {
@@ -281,4 +310,5 @@ public class ToDoController implements Initializable {
         }
 
     }
+
 }

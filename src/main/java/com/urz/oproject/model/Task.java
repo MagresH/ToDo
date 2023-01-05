@@ -31,6 +31,9 @@ public class Task implements Serializable {
     @Column(name = "important_status", nullable = false)
     private boolean importantStatus;
 
+    @ManyToOne
+    AppUser appUser;
+
     public Task(String shortDesc, String longDesc, boolean taskStatus, boolean importantStatus) {
         this.shortDesc = shortDesc;
         this.longDesc = longDesc;
