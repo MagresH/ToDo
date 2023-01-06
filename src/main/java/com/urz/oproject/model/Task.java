@@ -21,10 +21,6 @@ public class Task implements Serializable {
 
     @Column(name = "description", nullable = false)
     private String description;
-//
-//    @Lob
-//    @Column(name = "long_desc")
-//    private String longDesc;
 
     @Column(name = "dead_line_date")
     private LocalDate deadLineDate;

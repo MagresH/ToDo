@@ -11,4 +11,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     void deleteTaskById(Long id);
 
     Optional<List<Task>> findTasksByAppUser(AppUser appUser);
+
+    Optional<List<Task>> findTasksByTaskStatusTrue();
+
+
 }

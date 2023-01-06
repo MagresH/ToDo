@@ -6,6 +6,12 @@
 .button:hover{
 -fx-background-color : #325f61;
 }
+-hbox-button:hover{
+    -fx-background-color : #325f61;
+}
+-jfx-button:hover{
+    -fx-background-color : pink;
+}
 .button:pressed
 {
 -fx-text-fill : #1C3738;
@@ -13,11 +19,11 @@
 }
 
 .scroll-pane {
-    -fx-background-color:  #F4FFF8;
+    -fx-background-color:  white;
 }
 
 .scroll-bar:horizontal, .scroll-bar:vertical{
-    -fx-background-color:transparent;
+    -fx-background-color:#F4FFF8;
 }
 
 .increment-button, .decrement-button {
@@ -27,17 +33,25 @@
 
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track{
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
+    -fx-background-color: white;
+    -fx-border-color: white;
     -fx-background-radius: 0em;
 }
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color:   #F4FFF8;
+    -fx-background-color:   black;
     -fx-background-radius: 5em;
 }
 
 .scroll-pane > .corner {
     -fx-background-color:  #F4FFF8;
+}
+.glyph-icon {
+    -glyph-size:28px;
+    -fx-cursor: hand;
+}
+.glyph-icon:hover{
+    -glyph-size:32px;
+    -fx-fill: rgb(20, 178, 10);
 }

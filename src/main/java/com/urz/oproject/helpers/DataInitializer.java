@@ -5,11 +5,11 @@ import com.urz.oproject.model.AppUser;
 import com.urz.oproject.model.Task;
 import com.urz.oproject.service.TaskService;
 import com.urz.oproject.service.UserService;
-import de.jensd.fx.glyphs.testapps.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+
 
 @Component
 public class DataInitializer {
@@ -25,6 +25,30 @@ public class DataInitializer {
         AppUser user = new AppUser("Thomas","123");
         userService.addUser(user);
         userService.setLoggedUser(user);
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
         taskService.addTask(new Task("Visit Mary", LocalDate.of(2023,1,6),false,false,user));
         taskService.addTask(new Task("Visit John", LocalDate.of(2023,1,6),false,false,user));
         taskService.addTask(new Task("Cat food", LocalDate.of(2023,1,6),false,false,user));

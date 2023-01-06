@@ -26,12 +26,10 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-//    public List<Task> getTasks(){
-//        return taskRepository.findAll();
-//    }
-    public List<Task> getTasks(){
+    public List<Task> getTasks() {
         return taskRepository.findTasksByAppUser(UserService.loggedUser).get();
     }
+
     public Task addTask(Task task) {
         return taskRepository.save(task);
     }
@@ -41,5 +39,10 @@ public class TaskService {
         taskRepository.deleteTaskById(id);
     }
 
+    public void checkTask(){
 
+    }
+    public List<Task> getDoneTasks() {
+        return taskRepository.findTasksByTaskStatusTrue().get();
+    }
 }
