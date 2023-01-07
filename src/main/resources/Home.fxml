@@ -36,7 +36,7 @@
             </JFXButton>
             <JFXButton fx:id="btnOrders" contentDisplay="CENTER" layoutX="10.0" layoutY="595.0" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="All tasks" textFill="WHITE">
                <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="LIST" wrappingWidth="130.0" />
+                  <FontAwesomeIconView fill="WHITE" glyphName="LIST" text="" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
             <JFXButton fx:id="btnCustomers" contentDisplay="CENTER" layoutX="10.0" layoutY="525.0" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Important" textFill="WHITE">
@@ -97,7 +97,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="4.0" layoutY="167.0" prefHeight="353.0" prefWidth="786.0" style="-fx-background-color: white; -fx-background-insets: 0-0-0-0;" stylesheets="@style.css" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="167.0">
+                  <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="4.0" layoutY="167.0" prefHeight="530.0" prefWidth="786.0" style="-fx-background-color: white; -fx-background-insets: 0-0-0-0; -fx-selection-bar: #325f61;" stylesheets="@style.css" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="167.0">
                      <columns>
                         <TableColumn fx:id="toDoDescColumn" prefWidth="517.0" text="shortDesc" />
                         <TableColumn fx:id="deadLineDateColumn" prefWidth="100.0" style="-fx-alignment: center;" text="Column X" />
@@ -107,7 +107,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <TableView fx:id="doneTableView" fixedCellSize="60.0" layoutY="553.0" prefHeight="149.0" prefWidth="786.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="553.0">
+                  <TableView fx:id="doneTableView" fixedCellSize="60.0" layoutY="553.0" prefHeight="149.0" prefWidth="786.0" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="553.0">
                      <columns>
                         <TableColumn fx:id="doneDescColumn" prefWidth="629.0" text="shortDesc" />
                         <TableColumn fx:id="doneCustomColumn" prefWidth="126.0" text="Column X" />
@@ -117,15 +117,15 @@
                      </columnResizePolicy>
                   </TableView>
                   <TextField layoutX="588.0" layoutY="41.0" prefHeight="38.0" prefWidth="201.0" promptText="search" style="-fx-background-color: white; -fx-border-color: #1c3738; -fx-border-radius: 2em;" visible="false" AnchorPane.rightAnchor="5.0" />
-                  <Label layoutX="33.0" layoutY="34.0" text="Today Tasks" textFill="#1c3738">
+                  <Label layoutX="33.0" layoutY="34.0" style="-fx-font-smoothing-type: lcd;" text="Today Tasks" textFill="#1c3738">
                      <font>
                         <Font name="System Bold" size="35.0" />
                      </font>
                   </Label>
                   <Separator layoutX="33.0" layoutY="72.0" prefHeight="38.0" prefWidth="540.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="221.0" AnchorPane.topAnchor="72.0" />
                   <Label textFill="#e7e5e5" />
-                  <Separator layoutY="531.0" prefHeight="18.0" prefWidth="794.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="531.0" />
-                  <Separator layoutY="540.0" prefHeight="17.0" prefWidth="796.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="540.0" />
+                  <Separator layoutY="531.0" prefHeight="18.0" prefWidth="794.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="531.0" />
+                  <Separator layoutY="540.0" prefHeight="17.0" prefWidth="796.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="540.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" visible="false" />

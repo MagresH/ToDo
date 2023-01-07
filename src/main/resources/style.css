@@ -12,6 +12,7 @@
 -jfx-button:hover{
     -fx-background-color : pink;
 }
+
 .button:pressed
 {
 -fx-text-fill : #1C3738;

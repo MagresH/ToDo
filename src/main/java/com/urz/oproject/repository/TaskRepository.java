@@ -4,6 +4,7 @@ import com.urz.oproject.model.AppUser;
 import com.urz.oproject.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,5 +15,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Optional<List<Task>> findTasksByTaskStatusTrue();
 
+    BigInteger countTasksByTaskStatusIsTrue();
 
+    Optional<List<Task>> findTasksByTaskStatusFalse();
+
+    Optional<List<Task>> findTasksByAppUserOrderByTaskStatusAsc(AppUser appUser);
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -27,10 +28,16 @@ public class TaskService {
     }
 
     public List<Task> getTasks() {
-        return taskRepository.findTasksByAppUser(UserService.loggedUser).get();
+        return taskRepository.findTasksByAppUserOrderByTaskStatusAsc(UserService.loggedUser).get();
+        // return taskRepository.findTasksByAppUser(UserService.loggedUser).get();
     }
 
     public Task addTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+    @Transactional
+    public Task editTask(Task task) {
         return taskRepository.save(task);
     }
 
@@ -39,10 +46,15 @@ public class TaskService {
         taskRepository.deleteTaskById(id);
     }
 
-    public void checkTask(){
+    public void checkTask() {
 
     }
+
     public List<Task> getDoneTasks() {
         return taskRepository.findTasksByTaskStatusTrue().get();
+    }
+
+    public List<Task> getUnDoneTasks() {
+        return taskRepository.findTasksByTaskStatusFalse().get();
     }
 }

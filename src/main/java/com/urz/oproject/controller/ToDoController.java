@@ -2,12 +2,15 @@ package com.urz.oproject.controller;
 
 
 import com.jfoenix.controls.JFXButton;
-import com.urz.oproject.model.AppUser;
 import com.urz.oproject.model.Task;
-import com.urz.oproject.repository.TaskRepository;
 import com.urz.oproject.service.TaskService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -53,7 +56,17 @@ public class ToDoController implements Initializable {
     @FXML
     private TableView<Task> toDoTableView, doneTableView, trashTableView;
     @FXML
-    private TableColumn<Task, String> toDoDescColumn, doneDescColumn, toDoCustomColumn, doneCustomColumn, trashDescColumn, trashCustomColumn;
+    private TableColumn<Task, String> toDoDescColumn;
+    @FXML
+    private TableColumn<Task, String> doneDescColumn;
+    @FXML
+    private TableColumn<Task, Task> toDoCustomColumn;
+    @FXML
+    private TableColumn<Task, String> doneCustomColumn;
+    @FXML
+    private TableColumn<Task, String> trashDescColumn;
+    @FXML
+    private TableColumn<Task, String> trashCustomColumn;
     @FXML
     private TableColumn<Task, LocalDate> deadLineDateColumn;
     @FXML
@@ -61,20 +74,18 @@ public class ToDoController implements Initializable {
 
     private final TaskService taskService;
     private final ApplicationContext applicationContext;
-    private final TaskRepository taskRepository;
+
 
     @Autowired
-    public ToDoController(TaskService taskService, ApplicationContext applicationContext,
-                          TaskRepository taskRepository) {
+    public ToDoController(TaskService taskService, ApplicationContext applicationContext) {
         this.taskService = taskService;
         this.applicationContext = applicationContext;
-        this.taskRepository = taskRepository;
     }
 
     @SneakyThrows
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
         //Perfomance
         anchorPane.setCache(true);
         anchorPane.setCacheShape(true);
@@ -83,13 +94,23 @@ public class ToDoController implements Initializable {
         //Moving main panel to front
         pnlOverview.toFront();
 
-        toDoTaskList = FXCollections.observableList(taskService.getTasks());
+
+        refreshTable();
+        toDoTask.setText(String.valueOf(toDoTaskList.size()));
         doneTaskList = FXCollections.observableList(taskService.getDoneTasks());
+
+//        for(Task x : toDoTableView.getItems())
+//        {
+//            if(x.isTaskStatus()==true){
+//                //toDoTableView.getColumns().get(0).setStyle("-fx-text-decoration:overline");
+//            }
+//        }
+
 
         totalTaskLabel.setText(String.valueOf(taskService.getTasks().size()));
 
         //Description column
-        Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory = this::call;
+        Callback<TableColumn<Task, Task>, TableCell<Task, Task>> cellFactory = this::call;
         toDoDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         toDoDescColumn.minWidthProperty().bind(toDoTableView.widthProperty().multiply(0.6));
         toDoDescColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.6));
@@ -101,27 +122,25 @@ public class ToDoController implements Initializable {
 
         //Custom column
         toDoCustomColumn.setCellFactory(cellFactory);
+        toDoCustomColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         toDoCustomColumn.minWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
         toDoCustomColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
 
 
-
         Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory1 = this::call2;
-
         Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory11 = this::call3;
 
-        doneDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("shortDesc"));
+        doneDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("description"));
         doneCustomColumn.setCellFactory(cellFactory1);
 
         trashCustomColumn.setCellFactory(cellFactory11);
-        trashDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("shortDesc"));
+        trashDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("description"));
 
         doneTableView.getStyleClass().add("noheader");
         toDoTableView.getStyleClass().add("noheader");
 
         toDoTableView.setItems(toDoTaskList);
         doneTableView.setItems(doneTaskList);
-
 
 
     }
@@ -145,11 +164,15 @@ public class ToDoController implements Initializable {
         }
 
     }
+    private void refreshTable(){
+        toDoTaskList = FXCollections.observableList(taskService.getTasks());
+        toDoTableView.setItems(toDoTaskList);
+    }
 
-    private TableCell<Task, String> call(TableColumn<Task, String> param) {
-        final TableCell<Task, String> cell = new TableCell<>() {
+    private TableCell<Task, Task> call(TableColumn<Task, Task> param) {
+        final TableCell<Task, Task> cell = new TableCell<>() {
             @Override
-            public void updateItem(String item, boolean empty) {
+            public void updateItem(Task item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
@@ -157,6 +180,14 @@ public class ToDoController implements Initializable {
                 } else {
                     FontAwesomeIconView checkIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK_SQUARE_ALT);
                     FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE_ALT);
+
+                    if (item.isTaskStatus()==true) {
+                        checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
+                        param.getTableView().getColumns().get(0).setStyle("-fx-text");
+                    } else {
+                        checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
+                    }
+
 
                     toDoTableView.setOnMouseClicked((MouseEvent event) -> {
                         Task selectedTask = toDoTableView.getSelectionModel().getSelectedItem();
@@ -176,16 +207,23 @@ public class ToDoController implements Initializable {
 //                        }
                     });
                     checkIcon.setOnMouseClicked((MouseEvent event) -> {
-                        checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
+
                         Task task = getSelectedTask(toDoTableView);
-                       // toDoTaskList.remove(task);
-                        toDoTableView.setItems(toDoTaskList);
-                        doneTaskList.add(task);
-                        completedTaskLabel.setText(String.valueOf(doneTaskList.size()));
-                        toDoTask.setText(String.valueOf(toDoTaskList.size()));
-                        if (!doneTaskList.isEmpty()) {
-                            doneTableView.setItems(doneTaskList);
+                        if (task.isTaskStatus()) {
+                            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
+                            task.setTaskStatus(false);
+                            taskService.editTask(task);
+                            completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
+                            toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
+                        } else {
+                            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
+                            task.setTaskStatus(true);
+                            taskService.editTask(task);
+                            completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
+                            toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
+
                         }
+                        refreshTable();
                     });
 
                     editIcon.setOnMouseClicked((MouseEvent event) -> {
@@ -201,12 +239,12 @@ public class ToDoController implements Initializable {
                             Scene scene = new Scene(root);
                             stage.setScene(scene);
                             stage.show();
+                            if (stage.onCloseRequestProperty().isNotNull().getValue()) System.out.println("test");
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     });
-
                     HBox managebtn = new HBox(editIcon, checkIcon);
                     managebtn.setStyle("-fx-alignment:center");
                     HBox.setMargin(checkIcon, new Insets(2, 0, 0, 3));
@@ -284,11 +322,6 @@ public class ToDoController implements Initializable {
                 } else {
                     FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
 
-                    deleteIcon.setStyle(
-                            " -fx-cursor: hand ;"
-                                    + "-glyph-size:28px;"
-                                    + "-fx-fill:#ff1744;"
-                    );
                     deleteIcon.setOnMouseClicked((MouseEvent event) -> {
                         Stage dialog = new Stage();
                         dialog.initModality(Modality.APPLICATION_MODAL);
