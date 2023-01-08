@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.urz.oproject.model.Task;
 import com.urz.oproject.service.TaskService;
+import com.urz.oproject.service.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,49 +18,41 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @Controller
-public class EditTaskController implements Initializable {
+public class AddTaskController implements Initializable {
 
     private final TaskService taskService;
     @FXML
-    private JFXButton btnApply;
-
-    @FXML
-    private JFXButton btnCancel;
-
+    private JFXButton btnApply, btnCancel;
     @FXML
     private DatePicker dataPicker;
-
     @FXML
     private TextField description;
-
     @FXML
     private JFXCheckBox importantCheckBox;
 
-    private Task selectedTask;
 
     @Autowired
-    public EditTaskController(TaskService taskService) {
+    public AddTaskController(TaskService taskService) {
         this.taskService = taskService;
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        selectedTask = taskService.getSelectedTask();
-        description.setText(selectedTask.getDescription());
-        if(selectedTask.isImportantStatus()){
-            importantCheckBox.selectedProperty().setValue(true);
-        }
-        dataPicker.setValue(selectedTask.getDeadLineDate());
-
+        System.out.println("adding started");
     }
 
     public void handleClicks(ActionEvent actionEvent) {
-
         if (actionEvent.getSource() == btnApply) {
-            selectedTask.setDescription(description.getText());
-            selectedTask.setDeadLineDate(dataPicker.getValue());
-            selectedTask.setImportantStatus(importantCheckBox.isSelected());
-            taskService.editTask(selectedTask);
+            Task newTask = new Task();
+            newTask.setDescription(description.getText());
+            newTask.setDeadLineDate(dataPicker.getValue());
+            newTask.setImportantStatus(importantCheckBox.isSelected());
+            newTask.setTaskStatus(false);
+            newTask.setAppUser(UserService.loggedUser);
+            System.out.println(newTask);
+            taskService.addTask(newTask);
+            System.out.println("test dodania");
             Stage stage = (Stage) btnCancel.getScene().getWindow();
             stage.close();
         }

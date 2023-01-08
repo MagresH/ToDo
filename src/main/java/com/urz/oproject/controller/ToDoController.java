@@ -6,11 +6,7 @@ import com.urz.oproject.model.Task;
 import com.urz.oproject.service.TaskService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -39,7 +35,6 @@ import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @Controller
@@ -50,7 +45,7 @@ public class ToDoController implements Initializable {
     @FXML
     private Label totalTaskLabel, completedTaskLabel, toDoTask;
     @FXML
-    private JFXButton btnOverview, btnTrash, btnSignout;
+    private JFXButton btnOverview, btnTrash, btnSignout, addTaskButton;
     @FXML
     private AnchorPane pnlOverview, pnlTrash;
     @FXML
@@ -71,7 +66,6 @@ public class ToDoController implements Initializable {
     private TableColumn<Task, LocalDate> deadLineDateColumn;
     @FXML
     private ObservableList<Task> toDoTaskList, doneTaskList;
-
     private final TaskService taskService;
     private final ApplicationContext applicationContext;
 
@@ -86,31 +80,21 @@ public class ToDoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //Perfomance
-        anchorPane.setCache(true);
-        anchorPane.setCacheShape(true);
-        anchorPane.setCacheHint(CacheHint.SPEED);
+//        //Perfomance
+//        anchorPane.setCache(true);
+//        anchorPane.setCacheShape(true);
+//        anchorPane.setCacheHint(CacheHint.SPEED);
+//
+//        toDoTableView.setCache(true);
+//        toDoTableView.setCacheShape(true);
+//        toDoTableView.setCacheHint(CacheHint.SPEED);
 
         //Moving main panel to front
         pnlOverview.toFront();
 
 
-        refreshTable();
-        toDoTask.setText(String.valueOf(toDoTaskList.size()));
-        doneTaskList = FXCollections.observableList(taskService.getDoneTasks());
-
-//        for(Task x : toDoTableView.getItems())
-//        {
-//            if(x.isTaskStatus()==true){
-//                //toDoTableView.getColumns().get(0).setStyle("-fx-text-decoration:overline");
-//            }
-//        }
-
-
-        totalTaskLabel.setText(String.valueOf(taskService.getTasks().size()));
-
         //Description column
-        Callback<TableColumn<Task, Task>, TableCell<Task, Task>> cellFactory = this::call;
+        Callback<TableColumn<Task, Task>, TableCell<Task, Task>> cellFactory = this::cellFactory;
         toDoDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         toDoDescColumn.minWidthProperty().bind(toDoTableView.widthProperty().multiply(0.6));
         toDoDescColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.6));
@@ -126,28 +110,29 @@ public class ToDoController implements Initializable {
         toDoCustomColumn.minWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
         toDoCustomColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
 
+//        Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory11 = this::call3;
+//        trashCustomColumn.setCellFactory(cellFactory11);
+//        trashDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory1 = this::call2;
-        Callback<TableColumn<Task, String>, TableCell<Task, String>> cellFactory11 = this::call3;
-
-        doneDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("description"));
-        doneCustomColumn.setCellFactory(cellFactory1);
-
-        trashCustomColumn.setCellFactory(cellFactory11);
-        trashDescColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("description"));
-
-        doneTableView.getStyleClass().add("noheader");
         toDoTableView.getStyleClass().add("noheader");
-
         toDoTableView.setItems(toDoTaskList);
-        doneTableView.setItems(doneTaskList);
-
+        refreshTable();
 
     }
 
     private Task getSelectedTask(TableView<Task> tableView) {
         Task task = tableView.getSelectionModel().getSelectedItem();
         return task;
+    }
+
+    public void refreshTable() {
+        toDoTaskList = FXCollections.observableList(taskService.getTasks());
+        totalTaskLabel.setText(String.valueOf(taskService.getTasks().size()));
+        completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
+        toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
+
+        toDoTableView.setItems(toDoTaskList);
+        toDoTableView.refresh();
     }
 
     public void handleClicks(ActionEvent actionEvent) {
@@ -162,154 +147,115 @@ public class ToDoController implements Initializable {
             trashDescColumn = doneDescColumn;
             pnlTrash.toFront();
         }
+        if (actionEvent.getSource() == addTaskButton){
+            System.out.println("test");
+            onAddButtonClick();
+        }
 
     }
-    private void refreshTable(){
-        toDoTaskList = FXCollections.observableList(taskService.getTasks());
-        toDoTableView.setItems(toDoTaskList);
-    }
 
-    private TableCell<Task, Task> call(TableColumn<Task, Task> param) {
-        final TableCell<Task, Task> cell = new TableCell<>() {
+    private TableCell<Task, Task> cellFactory(TableColumn<Task, Task> param) {
+        return new TableCell<>() {
             @Override
             public void updateItem(Task item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
                     setText(null);
+
                 } else {
                     FontAwesomeIconView checkIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK_SQUARE_ALT);
                     FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE_ALT);
+                    FontAwesomeIconView starIcon = new FontAwesomeIconView(FontAwesomeIcon.STAR);
 
-                    if (item.isTaskStatus()==true) {
-                        checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
-                        param.getTableView().getColumns().get(0).setStyle("-fx-text");
-                    } else {
-                        checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
-                    }
+                    if (item.isTaskStatus()) checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
+                    else checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
 
+                    if (item.isImportantStatus()) starIcon.setIcon(FontAwesomeIcon.STAR);
+                    else starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
 
                     toDoTableView.setOnMouseClicked((MouseEvent event) -> {
-                        Task selectedTask = toDoTableView.getSelectionModel().getSelectedItem();
-//                        if (selectedTask != null) {
-//                            if (event.getClickCount() == 2) {
-//                                Stage dialog = new Stage();
-//                                dialog.initModality(Modality.APPLICATION_MODAL);
-//                                VBox dialogVbox = new VBox(20);
-//                                Label label = new Label(selectedTask.getDescription());
-//                                dialogVbox.getChildren().add(label);
-//                                Scene dialogScene = new Scene(dialogVbox, 300, 200);
-//                                dialog.setScene(dialogScene);
-//                                dialog.show();
-//                                System.out.println("You clicked on " + toDoTableView.getSelectionModel().getSelectedItem().getDescription());
-//
-//                            }
-//                        }
+                        if (event.getClickCount() == 2) onEditIconClick(getSelectedTask(toDoTableView));
                     });
+
                     checkIcon.setOnMouseClicked((MouseEvent event) -> {
-
-                        Task task = getSelectedTask(toDoTableView);
-                        if (task.isTaskStatus()) {
-                            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
-                            task.setTaskStatus(false);
-                            taskService.editTask(task);
-                            completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
-                            toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
-                        } else {
-                            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
-                            task.setTaskStatus(true);
-                            taskService.editTask(task);
-                            completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
-                            toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
-
-                        }
-                        refreshTable();
+                        onCheckIconClick(checkIcon,getSelectedTask(toDoTableView));
                     });
 
                     editIcon.setOnMouseClicked((MouseEvent event) -> {
-                        Task task = toDoTableView.getSelectionModel().getSelectedItem();
-                        taskService.setSelectedTask(task);
-                        try {
-                            Stage stage = new Stage();
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setControllerFactory(applicationContext::getBean);
-                            fxmlLoader.setLocation(getClass().getResource("/EditTask.fxml"));
-                            AnchorPane root = fxmlLoader.load();
-                            stage.setTitle("Sample app");
-                            Scene scene = new Scene(root);
-                            stage.setScene(scene);
-                            stage.show();
-                            if (stage.onCloseRequestProperty().isNotNull().getValue()) System.out.println("test");
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        onEditIconClick(getSelectedTask(toDoTableView));
                     });
-                    HBox managebtn = new HBox(editIcon, checkIcon);
+
+                    starIcon.setOnMouseClicked((MouseEvent event) -> {
+                        onStarIconClick(starIcon,getSelectedTask(toDoTableView));
+                    });
+
+                    HBox managebtn = new HBox(starIcon, editIcon, checkIcon);
                     managebtn.setStyle("-fx-alignment:center");
+                    HBox.setMargin(starIcon, new Insets(2, 3, 0, 3));
                     HBox.setMargin(checkIcon, new Insets(2, 0, 0, 3));
                     HBox.setMargin(editIcon, new Insets(2, 3, 0, 2));
                     setGraphic(managebtn);
-                    setText(null);
                 }
             }
 
-
         };
-        return cell;
     }
 
-    private TableCell<Task, String> call2(TableColumn<Task, String> param) {
-
-
-        final TableCell<Task, String> cell = new TableCell<>() {
-            @Override
-            public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                    setText(null);
-                } else {
-                    FontAwesomeIconView reDoIcon = new FontAwesomeIconView(FontAwesomeIcon.ARROW_CIRCLE_ALT_UP);
-                    reDoIcon.setOnMouseClicked((MouseEvent event) -> {
-                        Stage dialog = new Stage();
-                        dialog.initModality(Modality.APPLICATION_MODAL);
-                        //   dialog.initOwner(primaryStage);
-                        VBox dialogVbox = new VBox(20);
-                        HBox hbox = new HBox(10);
-                        dialogVbox.getChildren().add(new Label("Do you want to permanently delete task?"));
-                        Button yesButton = new Button("Yes");
-                        Button noButton = new Button("No");
-                        hbox.getChildren().add(yesButton);
-                        hbox.getChildren().add(noButton);
-                        dialogVbox.getChildren().add(hbox);
-                        Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                        dialog.setScene(dialogScene);
-                        dialog.show();
-                        yesButton.setOnMouseClicked((MouseEvent event1) -> {
-                            Task task = doneTableView.getSelectionModel().getSelectedItem();
-                            doneTaskList.remove(task);
-                            doneTableView.setItems(doneTaskList);
-                            taskService.deleteTask(task.getId());
-                            totalTaskLabel.setText(String.valueOf(taskService.getTasks().size()));
-                            toDoTask.setText(String.valueOf(toDoTaskList.size()));
-
-                            dialog.close();
-                        });
-                        noButton.setOnMouseClicked((MouseEvent event2) -> {
-                            dialog.close();
-                        });
-                    });
-                    HBox managebtn = new HBox(reDoIcon);
-                    managebtn.setStyle("-fx-alignment:center");
-                    HBox.setMargin(reDoIcon, new Insets(2, 2, 0, 3));
-                    setGraphic(managebtn);
-                    setText(null);
-                }
-            }
-        };
-        return cell;
+    private void onEditIconClick(Task task) {
+        taskService.setSelectedTask(task);
+        try {
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            fxmlLoader.setLocation(getClass().getResource("/EditTask.fxml"));
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+            stage.setOnHiding(hideEvent -> refreshTable());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    @FXML
+    private void onAddButtonClick() {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            fxmlLoader.setLocation(getClass().getResource("/AddTask.fxml"));
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+            stage.setOnHiding(hideEvent -> refreshTable());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onStarIconClick(FontAwesomeIconView starIcon,Task task) {
+        if (task.isImportantStatus()) {
+            starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
+            task.setImportantStatus(false);
+        } else {
+            starIcon.setIcon(FontAwesomeIcon.STAR);
+            task.setImportantStatus(true);
+        }
+        taskService.editTask(task);
+        refreshTable();
+    }
+    private void onCheckIconClick(FontAwesomeIconView checkIcon, Task task) {
+        if (task.isTaskStatus()) {
+            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
+            task.setTaskStatus(false);
+        } else {
+            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
+            task.setTaskStatus(true);
+        }
+        taskService.editTask(task);
+        completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
+        toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
+        refreshTable();
+    }
+
 
     private TableCell<Task, String> call3(TableColumn<Task, String> param) {
         final TableCell<Task, String> cell = new TableCell<>() {

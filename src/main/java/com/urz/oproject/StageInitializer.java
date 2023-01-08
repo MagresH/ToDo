@@ -34,7 +34,6 @@ public class StageInitializer implements ApplicationListener<ToDoApplication.Sta
             FXMLLoader fxmlLoader = new FXMLLoader(toDoResource.getURL());
             fxmlLoader.setControllerFactory(aClass -> applicationContext.getBean(aClass));
             Parent parent = fxmlLoader.load();
-
             Stage stage = event.getStage();
             stage.setTitle(applicationTitle);
             stage.setScene(new Scene(parent));

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.StyledEditorKit;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class TaskService {
     @Getter
     @Setter
     private Task selectedTask;
+
     private final TaskRepository taskRepository;
 
     @Autowired
@@ -46,9 +48,6 @@ public class TaskService {
         taskRepository.deleteTaskById(id);
     }
 
-    public void checkTask() {
-
-    }
 
     public List<Task> getDoneTasks() {
         return taskRepository.findTasksByTaskStatusTrue().get();
