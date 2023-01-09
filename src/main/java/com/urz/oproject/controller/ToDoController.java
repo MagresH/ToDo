@@ -21,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 @Controller
@@ -63,7 +63,7 @@ public class ToDoController implements Initializable {
     @FXML
     private TableColumn<Task, String> trashCustomColumn;
     @FXML
-    private TableColumn<Task, LocalDate> deadLineDateColumn;
+    private TableColumn<Task, Task> deadLineDateColumn;
     @FXML
     private ObservableList<Task> toDoTaskList, doneTaskList;
     private final TaskService taskService;
@@ -76,18 +76,39 @@ public class ToDoController implements Initializable {
         this.applicationContext = applicationContext;
     }
 
+    private static TableRow<Task> rowFactory(TableView<Task> tbl) {
+        return new TableRow<>() {
+            @Override
+            protected void updateItem(Task item, boolean empty) {
+                super.updateItem(item, empty);
+                updateStyleAndTooltip();
+            }
+
+            private void updateStyleAndTooltip() {
+                Task item = getItem();
+                if (item == null || isEmpty()) {
+                    setStyle("");
+                    setTooltip(null);
+                } else {
+                    if (item.isTaskStatus()) getStyleClass().add("highlightedRow");
+                    else getStyleClass().remove("highlightedRow");
+                }
+            }
+        };
+    }
+
     @SneakyThrows
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-//        //Perfomance
-//        anchorPane.setCache(true);
-//        anchorPane.setCacheShape(true);
-//        anchorPane.setCacheHint(CacheHint.SPEED);
-//
-//        toDoTableView.setCache(true);
-//        toDoTableView.setCacheShape(true);
-//        toDoTableView.setCacheHint(CacheHint.SPEED);
+        //Perfomance
+        anchorPane.setCache(true);
+        anchorPane.setCacheShape(true);
+        anchorPane.setCacheHint(CacheHint.SPEED);
+
+        toDoTableView.setCache(true);
+        toDoTableView.setCacheShape(true);
+        toDoTableView.setCacheHint(CacheHint.SPEED);
 
         //Moving main panel to front
         pnlOverview.toFront();
@@ -116,8 +137,9 @@ public class ToDoController implements Initializable {
 
         toDoTableView.getStyleClass().add("noheader");
         toDoTableView.setItems(toDoTaskList);
+        toDoTableView.setRowFactory(ToDoController::rowFactory);
         refreshTable();
-
+        toDoTableView.addEventFilter(ScrollEvent.ANY, scrollEvent -> toDoTableView.refresh());
     }
 
     private Task getSelectedTask(TableView<Task> tableView) {
@@ -147,7 +169,7 @@ public class ToDoController implements Initializable {
             trashDescColumn = doneDescColumn;
             pnlTrash.toFront();
         }
-        if (actionEvent.getSource() == addTaskButton){
+        if (actionEvent.getSource() == addTaskButton) {
             System.out.println("test");
             onAddButtonClick();
         }
@@ -168,18 +190,22 @@ public class ToDoController implements Initializable {
                     FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE_ALT);
                     FontAwesomeIconView starIcon = new FontAwesomeIconView(FontAwesomeIcon.STAR);
 
-                    if (item.isTaskStatus()) checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
-                    else checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
+                    if (item.isTaskStatus()) {
+                        checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
+                    } else {
+                        checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
+                    }
 
                     if (item.isImportantStatus()) starIcon.setIcon(FontAwesomeIcon.STAR);
                     else starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
 
+                    //TODO bug, fast clicking on check icon trigger this method with no task selected(null)
                     toDoTableView.setOnMouseClicked((MouseEvent event) -> {
                         if (event.getClickCount() == 2) onEditIconClick(getSelectedTask(toDoTableView));
                     });
 
                     checkIcon.setOnMouseClicked((MouseEvent event) -> {
-                        onCheckIconClick(checkIcon,getSelectedTask(toDoTableView));
+                        onCheckIconClick(checkIcon, getSelectedTask(toDoTableView));
                     });
 
                     editIcon.setOnMouseClicked((MouseEvent event) -> {
@@ -187,7 +213,7 @@ public class ToDoController implements Initializable {
                     });
 
                     starIcon.setOnMouseClicked((MouseEvent event) -> {
-                        onStarIconClick(starIcon,getSelectedTask(toDoTableView));
+                        onStarIconClick(starIcon, getSelectedTask(toDoTableView));
                     });
 
                     HBox managebtn = new HBox(starIcon, editIcon, checkIcon);
@@ -216,6 +242,7 @@ public class ToDoController implements Initializable {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void onAddButtonClick() {
         try {
@@ -231,7 +258,7 @@ public class ToDoController implements Initializable {
         }
     }
 
-    private void onStarIconClick(FontAwesomeIconView starIcon,Task task) {
+    private void onStarIconClick(FontAwesomeIconView starIcon, Task task) {
         if (task.isImportantStatus()) {
             starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
             task.setImportantStatus(false);
@@ -242,6 +269,7 @@ public class ToDoController implements Initializable {
         taskService.editTask(task);
         refreshTable();
     }
+
     private void onCheckIconClick(FontAwesomeIconView checkIcon, Task task) {
         if (task.isTaskStatus()) {
             checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);

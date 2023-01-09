@@ -4,6 +4,8 @@
 .table-view {
     -fx-background-color:white;
     -fx-background-radius:14 14 0 0;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
 
     }
 .table-view .column-header-background{
@@ -14,6 +16,7 @@
 
 
     }
+
 .table-view .column-header, .table-view .filler{
         -fx-size:50px;
         -fx-border-width: 0 0 10 0;

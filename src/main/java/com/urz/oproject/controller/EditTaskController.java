@@ -11,11 +11,11 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 @Controller
 public class EditTaskController implements Initializable {
 
@@ -44,6 +44,7 @@ public class EditTaskController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("edit task sie wlaczyl");
         selectedTask = taskService.getSelectedTask();
         description.setText(selectedTask.getDescription());
         if(selectedTask.isImportantStatus()){

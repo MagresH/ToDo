@@ -36,7 +36,9 @@ public class StageInitializer implements ApplicationListener<ToDoApplication.Sta
             Parent parent = fxmlLoader.load();
             Stage stage = event.getStage();
             stage.setTitle(applicationTitle);
-            stage.setScene(new Scene(parent));
+            Scene scene = new Scene(parent);
+            scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            stage.setScene(scene);
             stage.setMinWidth(1070);
             stage.setMinHeight(800);
             stage.show();

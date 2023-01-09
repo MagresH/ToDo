@@ -22,7 +22,12 @@
 .scroll-pane {
     -fx-background-color:  white;
 }
-
+.highlightedRow {
+    -fx-background-color: #325f61;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background: -fx-accent;
+    -fx-text-fill: -fx-selection-bar-text;
+}
 .scroll-bar:horizontal, .scroll-bar:vertical{
     -fx-background-color:#F4FFF8;
 }
