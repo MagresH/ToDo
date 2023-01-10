@@ -26,12 +26,11 @@ public class DataInitializer {
         userService.addUser(user);
         userService.setLoggedUser(user);
 
-        taskService.addTask(new Task("Visit Mary12", LocalDate.of(2023,1,6),true,false,user));
-        taskService.addTask(new Task("Visit Mary13", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Visit Mary14", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Visit Mary15", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Visit Mary157", LocalDate.of(2023,1,6),false,true,user));
-        taskService.addTask(new Task("Visit Mary158", LocalDate.of(2023,1,6),false,false,user));
+             taskService.addTask(new Task("Visit Mary158", LocalDate.of(2023,1,10),false,false,user));
+             taskService.addTask(new Task("Visit Mary15", LocalDate.of(2023,1,10),false,false,user));
+             taskService.addTask(new Task("Visit Mary1548", LocalDate.of(2023,1,10),false,false,user));
+             taskService.addTask(new Task("Visit Mary1558", LocalDate.of(2023,1,10),false,false,user));
+             taskService.addTask(new Task("Visit Mary15568", LocalDate.of(2023,1,10),false,false,user));
         taskService.addTask(new Task("Visit Mary159", LocalDate.of(2023,1,6),false,false,user));
         taskService.addTask(new Task("Visit Mary150", LocalDate.of(2023,1,6),false,true,user));
         taskService.addTask(new Task("Visit Mary16", LocalDate.of(2023,1,6),false,false,user));

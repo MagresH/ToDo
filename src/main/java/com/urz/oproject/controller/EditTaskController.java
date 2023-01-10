@@ -15,7 +15,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+
 @Controller
 public class EditTaskController implements Initializable {
 
@@ -47,7 +49,7 @@ public class EditTaskController implements Initializable {
         System.out.println("edit task sie wlaczyl");
         selectedTask = taskService.getSelectedTask();
         description.setText(selectedTask.getDescription());
-        if(selectedTask.isImportantStatus()){
+        if (selectedTask.isImportantStatus()) {
             importantCheckBox.selectedProperty().setValue(true);
         }
         dataPicker.setValue(selectedTask.getDeadLineDate());
@@ -58,7 +60,9 @@ public class EditTaskController implements Initializable {
 
         if (actionEvent.getSource() == btnApply) {
             selectedTask.setDescription(description.getText());
-            selectedTask.setDeadLineDate(dataPicker.getValue());
+            if (dataPicker.getValue() == null) {
+                selectedTask.setDeadLineDate(LocalDate.now());
+            } else selectedTask.setDeadLineDate(dataPicker.getValue());
             selectedTask.setImportantStatus(importantCheckBox.isSelected());
             taskService.editTask(selectedTask);
             Stage stage = (Stage) btnCancel.getScene().getWindow();

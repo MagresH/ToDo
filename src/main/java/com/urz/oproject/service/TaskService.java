@@ -3,6 +3,7 @@ package com.urz.oproject.service;
 import com.urz.oproject.model.AppUser;
 import com.urz.oproject.model.Task;
 import com.urz.oproject.repository.TaskRepository;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.StyledEditorKit;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -33,6 +38,11 @@ public class TaskService {
         return taskRepository.findTasksByAppUserOrderByTaskStatusAsc(UserService.loggedUser).get();
         // return taskRepository.findTasksByAppUser(UserService.loggedUser).get();
     }
+//    public List<Task> getTasks(){
+//        return taskRepository.findTasksByAppUserOrderByTaskStatusAsc(UserService.loggedUser).get().stream()
+//                .filter(task -> Objects.equals(task.getDeadLineDate(), LocalDate.now()))
+//                .collect(Collectors.toCollection(ArrayList::new));
+//    }
 
     public Task addTask(Task task) {
         return taskRepository.save(task);
@@ -44,8 +54,8 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(Long id) {
-        taskRepository.deleteTaskById(id);
+    public void deleteTask(Task task) {
+        taskRepository.delete(task);
     }
 
 

@@ -8,6 +8,7 @@ import com.urz.oproject.service.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 @Controller
@@ -45,12 +47,18 @@ public class AddTaskController implements Initializable {
     public void handleClicks(ActionEvent actionEvent) {
         if (actionEvent.getSource() == btnApply) {
             Task newTask = new Task();
+
+            if (description.getText()==null){
+            }
             newTask.setDescription(description.getText());
-            newTask.setDeadLineDate(dataPicker.getValue());
+
+            if (dataPicker.getValue() == null) {
+                newTask.setDeadLineDate(LocalDate.now());
+            } else newTask.setDeadLineDate(dataPicker.getValue());
+
             newTask.setImportantStatus(importantCheckBox.isSelected());
             newTask.setTaskStatus(false);
             newTask.setAppUser(UserService.loggedUser);
-            System.out.println(newTask);
             taskService.addTask(newTask);
             System.out.println("test dodania");
             Stage stage = (Stage) btnCancel.getScene().getWindow();
