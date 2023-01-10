@@ -36,33 +36,37 @@ public class AddTaskController implements Initializable {
     @Autowired
     public AddTaskController(TaskService taskService) {
         this.taskService = taskService;
-
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("adding started");
+        dataPicker.setValue(LocalDate.now());
     }
 
     public void handleClicks(ActionEvent actionEvent) {
         if (actionEvent.getSource() == btnApply) {
             Task newTask = new Task();
 
-            if (description.getText()==null){
+            if ((description.getText()==null||(description.getText()==""))){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Set description!");
+                alert.show();
             }
-            newTask.setDescription(description.getText());
+            else {
+                if (dataPicker.getValue()==null) newTask.setDeadLineDate(LocalDate.now());
+                else newTask.setDeadLineDate(dataPicker.getValue());
 
-            if (dataPicker.getValue() == null) {
-                newTask.setDeadLineDate(LocalDate.now());
-            } else newTask.setDeadLineDate(dataPicker.getValue());
+                newTask.setImportantStatus(importantCheckBox.isSelected());
+                newTask.setDescription(description.getText());
+                newTask.setImportantStatus(importantCheckBox.isSelected());
+                newTask.setTaskStatus(false);
+                newTask.setAppUser(UserService.loggedUser);
+                System.out.println("test");
+                taskService.addTask(newTask);
+                Stage stage = (Stage) btnApply.getScene().getWindow();
+                stage.close();
+            }
 
-            newTask.setImportantStatus(importantCheckBox.isSelected());
-            newTask.setTaskStatus(false);
-            newTask.setAppUser(UserService.loggedUser);
-            taskService.addTask(newTask);
-            System.out.println("test dodania");
-            Stage stage = (Stage) btnCancel.getScene().getWindow();
-            stage.close();
         }
         if (actionEvent.getSource() == btnCancel) {
             Stage stage = (Stage) btnCancel.getScene().getWindow();

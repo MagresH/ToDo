@@ -91,6 +91,7 @@ public class ToDoController implements Initializable {
         toDoCustomColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
 
 
+
         toDoTableView.getStyleClass().add("noheader");
         toDoTableView.setItems(toDoTaskList);
         toDoTableView.setRowFactory(RowFactory.getRowFactoryCallback(toDoTableView));
@@ -108,9 +109,11 @@ public class ToDoController implements Initializable {
         totalTaskLabel.setText(String.valueOf(taskService.getTasks().size()));
         completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
         toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
-        ObservableList<Task> temp = FXCollections.observableList(toDoTaskList.stream()
-                        .filter(task -> task.getDeadLineDate().equals(LocalDate.now()))
-                                .collect(Collectors.toCollection(ArrayList::new)));
+//        ObservableList<Task> temp = FXCollections.observableList(toDoTaskList.stream()
+//                        .filter(task -> task.getDeadLineDate().equals(LocalDate.now()))
+//                                .collect(Collectors.toCollection(ArrayList::new)));
+        ObservableList<Task> temp;
+        temp = FXCollections.observableList(taskService.getTodayTasks());
         toDoTableView.setItems(temp);
         toDoTableView.refresh();
     }
@@ -164,7 +167,7 @@ public class ToDoController implements Initializable {
     }
 
     public void onStarIconClick(FontAwesomeIconView starIcon, Task task) {
-        if (task.isImportantStatus()) {
+        if (task.getImportantStatus()) {
             starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
             task.setImportantStatus(false);
         } else {
@@ -176,7 +179,7 @@ public class ToDoController implements Initializable {
     }
 
     public void onCheckIconClick(FontAwesomeIconView checkIcon, Task task) {
-        if (task.isTaskStatus()) {
+        if (task.getTaskStatus()) {
             checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
             task.setTaskStatus(false);
         } else {

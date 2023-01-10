@@ -22,22 +22,21 @@ public class DataInitializer {
 
         this.taskService = taskService;
         this.userService = userService;
-        AppUser user = new AppUser("Thomas","123");
+        AppUser user = new AppUser("Thomas", "123");
         userService.addUser(user);
         userService.setLoggedUser(user);
 
-             taskService.addTask(new Task("Visit Mary158", LocalDate.of(2023,1,10),false,false,user));
-             taskService.addTask(new Task("Visit Mary15", LocalDate.of(2023,1,10),false,false,user));
-             taskService.addTask(new Task("Visit Mary1548", LocalDate.of(2023,1,10),false,false,user));
-             taskService.addTask(new Task("Visit Mary1558", LocalDate.of(2023,1,10),false,false,user));
-             taskService.addTask(new Task("Visit Mary15568", LocalDate.of(2023,1,10),false,false,user));
-        taskService.addTask(new Task("Visit Mary159", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Visit Mary150", LocalDate.of(2023,1,6),false,true,user));
-        taskService.addTask(new Task("Visit Mary16", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Visit Mary17", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Visit Mary18", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Visit John", LocalDate.of(2023,1,6),false,false,user));
-        taskService.addTask(new Task("Cat food", LocalDate.of(2023,1,6),false,false,user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit Mary158", LocalDate.now(), false, false, user));
+        taskService.addTask(new Task("Visit John", LocalDate.of(2023, 1, 8), false, false, user));
+        taskService.addTask(new Task("Cat food", LocalDate.of(2023, 1, 6), false, false, user));
 
 
     }

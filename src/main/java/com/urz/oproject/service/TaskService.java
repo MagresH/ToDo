@@ -16,6 +16,7 @@ import javax.swing.text.StyledEditorKit;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,14 +36,23 @@ public class TaskService {
     }
 
     public List<Task> getTasks() {
-        return taskRepository.findTasksByAppUserOrderByTaskStatusAsc(UserService.loggedUser).get();
-        // return taskRepository.findTasksByAppUser(UserService.loggedUser).get();
+        return taskRepository
+                .findTasksByAppUser(UserService.loggedUser)
+                .orElse(List.of())
+                .stream()
+                .sorted(Comparator.comparing(Task::getTaskStatus))
+                .toList();
     }
-//    public List<Task> getTasks(){
-//        return taskRepository.findTasksByAppUserOrderByTaskStatusAsc(UserService.loggedUser).get().stream()
-//                .filter(task -> Objects.equals(task.getDeadLineDate(), LocalDate.now()))
-//                .collect(Collectors.toCollection(ArrayList::new));
-//    }
+
+    public List<Task> getTodayTasks() {
+        return taskRepository
+                .findTasksByAppUser(UserService.loggedUser)
+                .orElse(List.of())
+                .stream()
+                .filter(task -> Objects.equals(task.getDeadLineDate(), LocalDate.now()))
+                .sorted(Comparator.comparing(Task::getTaskStatus))
+                .toList();
+    }
 
     public Task addTask(Task task) {
         return taskRepository.save(task);

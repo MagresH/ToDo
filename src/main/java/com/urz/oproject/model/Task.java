@@ -24,10 +24,10 @@ public class Task implements Serializable {
     @Column(name = "dead_line_date")
     private LocalDate deadLineDate;
     @Column(name = "task_status", nullable = false)
-    private boolean taskStatus;
+    private Boolean taskStatus;
 
     @Column(name = "important_status", nullable = false)
-    private boolean importantStatus;
+    private Boolean importantStatus;
 
     @ManyToOne
     AppUser appUser;

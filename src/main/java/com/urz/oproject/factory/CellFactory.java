@@ -41,13 +41,13 @@ public class CellFactory {
                     FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE_ALT);
                     FontAwesomeIconView starIcon = new FontAwesomeIconView(FontAwesomeIcon.STAR);
 
-                    if (item.isTaskStatus()) {
+                    if (item.getTaskStatus()) {
                         checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
                     } else {
                         checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
                     }
 
-                    if (item.isImportantStatus()) starIcon.setIcon(FontAwesomeIcon.STAR);
+                    if (item.getTaskStatus()) starIcon.setIcon(FontAwesomeIcon.STAR);
                     else starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
                     ContextMenu contextMenu = new ContextMenu();
                     MenuItem mi1 = new MenuItem("DELETE TASK");

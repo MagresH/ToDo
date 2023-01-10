@@ -17,6 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Optional<List<Task>> findTasksByTaskStatusFalse();
 
+    @Deprecated
     Optional<List<Task>> findTasksByAppUserOrderByTaskStatusAsc(AppUser appUser);
 
 }

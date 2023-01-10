@@ -23,7 +23,7 @@ public class RowFactory {
                     setStyle("");
                     setTooltip(null);
                 } else {
-                    if (item.isTaskStatus()) getStyleClass().add("highlightedRow");
+                    if (item.getTaskStatus()) getStyleClass().add("highlightedRow");
                     else getStyleClass().remove("highlightedRow");
                 }
             }

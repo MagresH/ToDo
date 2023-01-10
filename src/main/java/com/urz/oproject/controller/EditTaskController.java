@@ -7,6 +7,7 @@ import com.urz.oproject.service.TaskService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Controller
@@ -46,10 +48,9 @@ public class EditTaskController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("edit task sie wlaczyl");
         selectedTask = taskService.getSelectedTask();
         description.setText(selectedTask.getDescription());
-        if (selectedTask.isImportantStatus()) {
+        if (selectedTask.getImportantStatus()) {
             importantCheckBox.selectedProperty().setValue(true);
         }
         dataPicker.setValue(selectedTask.getDeadLineDate());
@@ -59,14 +60,22 @@ public class EditTaskController implements Initializable {
     public void handleClicks(ActionEvent actionEvent) {
 
         if (actionEvent.getSource() == btnApply) {
-            selectedTask.setDescription(description.getText());
-            if (dataPicker.getValue() == null) {
-                selectedTask.setDeadLineDate(LocalDate.now());
-            } else selectedTask.setDeadLineDate(dataPicker.getValue());
-            selectedTask.setImportantStatus(importantCheckBox.isSelected());
-            taskService.editTask(selectedTask);
-            Stage stage = (Stage) btnCancel.getScene().getWindow();
-            stage.close();
+            if ((description.getText()==null||(description.getText()==""))){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Set description!");
+                alert.show();
+            }
+            else {
+                if (dataPicker.getValue()==null) selectedTask.setDeadLineDate(LocalDate.now());
+                else selectedTask.setDeadLineDate(dataPicker.getValue());
+                selectedTask.setDeadLineDate(dataPicker.getValue());
+                selectedTask.setImportantStatus(importantCheckBox.isSelected());
+                selectedTask.setDescription(description.getText());
+                taskService.editTask(selectedTask);
+                Stage stage = (Stage) btnApply.getScene().getWindow();
+                stage.close();
+            }
+
         }
         if (actionEvent.getSource() == btnCancel) {
             Stage stage = (Stage) btnCancel.getScene().getWindow();
