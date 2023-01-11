@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 public class CellFactory {
     private final ToDoController toDoController;
     private final TaskService taskService;
@@ -26,7 +27,7 @@ public class CellFactory {
     }
 
     public CellFactory(ToDoController toDoController, TaskService taskService) {
-        this.taskService=taskService;
+        this.taskService = taskService;
         this.toDoController = toDoController;
         this.cellFactory = param -> new TableCell<Task, Task>() {
             @Override
@@ -47,8 +48,9 @@ public class CellFactory {
                         checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
                     }
 
-                    if (item.getTaskStatus()) starIcon.setIcon(FontAwesomeIcon.STAR);
+                    if (item.getImportantStatus()) starIcon.setIcon(FontAwesomeIcon.STAR);
                     else starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
+
                     ContextMenu contextMenu = new ContextMenu();
                     MenuItem mi1 = new MenuItem("DELETE TASK");
                     contextMenu.getItems().add(mi1);

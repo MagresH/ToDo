@@ -50,6 +50,7 @@ public class TaskService {
                 .orElse(List.of())
                 .stream()
                 .filter(task -> Objects.equals(task.getDeadLineDate(), LocalDate.now()))
+                .sorted(Comparator.comparing(Task::getImportantStatus).reversed())
                 .sorted(Comparator.comparing(Task::getTaskStatus))
                 .toList();
     }

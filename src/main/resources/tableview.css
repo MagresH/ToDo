@@ -6,7 +6,6 @@
     -fx-background-radius:14 14 0 0;
     -fx-text-alignment: center;
     -fx-alignment: center;
-
     }
 .table-view .column-header-background{
         -fx-background-color: white;
@@ -14,6 +13,20 @@
         -fx-background-insets: 0 0 10 0;
 
     }
+.table-row-cell{
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+.table-row-cell:filled:selected {
+    -fx-background: -fx-control-inner-background ;
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right,white, rgba(28, 55, 56, 0.71));
+    -fx-text-alignment: center;
+    -fx-table-cell-border-color: derive(-fx-color, 5%);
+}
+/*.table-row-cell:odd:filled:selected {*/
+/*    -fx-background: -fx-control-inner-background-alt ;*/
+/*}*/
 .table-view .column-header, .table-view .filler{
         -fx-size:50px;
         -fx-border-width: 0 0 10 0;

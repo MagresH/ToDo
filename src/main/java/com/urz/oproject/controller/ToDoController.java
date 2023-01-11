@@ -2,6 +2,7 @@ package com.urz.oproject.controller;
 
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextArea;
 import com.urz.oproject.factory.CellFactory;
 import com.urz.oproject.factory.RowFactory;
 import com.urz.oproject.model.Task;
@@ -11,6 +12,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,6 +49,8 @@ public class ToDoController implements Initializable {
     private JFXButton btnOverview, btnTrash, btnSignout, addTaskButton;
     @FXML
     private AnchorPane pnlOverview, pnlTrash;
+    @FXML
+    private JFXTextArea search;
     @FXML
     private TableView<Task> toDoTableView, doneTableView, trashTableView;
     @FXML
@@ -105,19 +110,38 @@ public class ToDoController implements Initializable {
     }
 
     public void refreshTable() {
-        toDoTaskList = FXCollections.observableList(taskService.getTasks());
-        totalTaskLabel.setText(String.valueOf(taskService.getTasks().size()));
-        completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
-        toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
-//        ObservableList<Task> temp = FXCollections.observableList(toDoTaskList.stream()
-//                        .filter(task -> task.getDeadLineDate().equals(LocalDate.now()))
-//                                .collect(Collectors.toCollection(ArrayList::new)));
-        ObservableList<Task> temp;
-        temp = FXCollections.observableList(taskService.getTodayTasks());
-        toDoTableView.setItems(temp);
+        toDoTaskList = FXCollections.observableList(taskService.getTodayTasks());
+        toDoTaskList = getSortedList();
+        totalTaskLabel.setText(String.valueOf(toDoTaskList.size()));
+        completedTaskLabel.setText(String.valueOf(toDoTaskList.stream().filter(Task::getTaskStatus).count()));
+        toDoTask.setText(String.valueOf(toDoTaskList.stream().filter(task -> !task.getTaskStatus()).count()));
+        toDoTableView.setItems(toDoTaskList);
         toDoTableView.refresh();
+        toDoTableView.getSelectionModel().clearSelection();
     }
+    private SortedList<Task> getSortedList() {
+        SortedList<Task> sortedList = new SortedList<>(getFilteredList());
+        sortedList.comparatorProperty().bind(toDoTableView.comparatorProperty());
+        toDoTableView.refresh();
+        return sortedList;
+    }
+    private FilteredList<Task> getFilteredList() {
+        FilteredList<Task> filteredList = new FilteredList<>(toDoTaskList, b -> true);
+        search.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate(task -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        toDoTableView.refresh();
+                        return true;
+                    }
+                    toDoTableView.refresh();
+                    String lowerCaseFilter = newValue.toLowerCase();
 
+                    if (task.getDescription().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else return task.getDeadLineDate().toString().contains(lowerCaseFilter);
+                }));
+        return filteredList;
+    }
     public void handleClicks(ActionEvent actionEvent) {
 
         if (actionEvent.getSource() == btnOverview) {
@@ -170,9 +194,11 @@ public class ToDoController implements Initializable {
         if (task.getImportantStatus()) {
             starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
             task.setImportantStatus(false);
+            System.out.println("on na off");
         } else {
             starIcon.setIcon(FontAwesomeIcon.STAR);
             task.setImportantStatus(true);
+            System.out.println("off na on");
         }
         taskService.editTask(task);
         refreshTable();
@@ -187,8 +213,6 @@ public class ToDoController implements Initializable {
             task.setTaskStatus(true);
         }
         taskService.editTask(task);
-        completedTaskLabel.setText(String.valueOf(taskService.getDoneTasks().size()));
-        toDoTask.setText(String.valueOf(taskService.getUnDoneTasks().size()));
         refreshTable();
     }
 
