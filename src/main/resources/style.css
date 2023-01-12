@@ -22,11 +22,22 @@
 .scroll-pane {
     -fx-background-color:  white;
 }
-.highlightedRow {
+.highlightedRow{
     -fx-background-color: #325f61;
     -fx-background-insets: 0, 1, 2;
-    -fx-background: -fx-accent;
-    -fx-text-fill: -fx-selection-bar-text;
+    /*-fx-background: -fx-accent;*/
+    /*-fx-text-fill: -fx-selection-bar-text;*/
+}
+
+.highlightedRow .text{
+    -fx-strikethrough: true;
+    -fx-text-fill: rgb(58, 58, 58);
+}
+.highlightedRow .glyph-icon{
+    -fx-fill: black;
+}
+.clickedButton{
+    -fx-background-color: linear-gradient(to right,#1C3738, rgba(255, 255, 255, 0.45));
 }
 .scroll-bar:horizontal, .scroll-bar:vertical{
     -fx-background-color:#F4FFF8;
@@ -46,7 +57,7 @@
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color:   black;
+    -fx-background-color:   #1C3738;
     -fx-background-radius: 5em;
 }
 
@@ -60,4 +71,12 @@
 .glyph-icon:hover{
     -glyph-size:32px;
     -fx-fill: rgb(20, 178, 10);
+}
+.text-field {
+     -fx-background-color: -fx-text-box-border, -fx-background ;
+     -fx-background-insets: 0, 0 0 1 0 ;
+     -fx-background-radius: 0 ;
+ }
+.text-field:focused {
+    -fx-background-color: -fx-focus-color, -fx-background ;
 }

@@ -1,4 +1,4 @@
-package com.urz.oproject.model;
+package com.sample.todoproject.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name="AppUser")
+@Table(name = "AppUser")
 @Builder
 public class AppUser implements Serializable {
     @Id
@@ -23,19 +23,33 @@ public class AppUser implements Serializable {
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
     @GeneratedValue(strategy = SEQUENCE, generator = "user_sequence")
     private Long id;
-    @Column
-    private String name;
 
-    @Column
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @Column(name = "password", nullable = false)
     private String password;
 
-    public AppUser(String name, String password) {
-        this.name = name;
+    public AppUser(String firstName, String lastName, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
         this.password = password;
     }
 
     @OneToMany(mappedBy = "appUser")
     private List<Task> tasks;
+
+    @OneToMany(mappedBy = "appUser")
+    private List<Trash> trashItems;
+
+
 
 
 }

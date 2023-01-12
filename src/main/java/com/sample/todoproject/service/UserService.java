@@ -1,8 +1,7 @@
-package com.urz.oproject.service;
+package com.sample.todoproject.service;
 
-import com.urz.oproject.model.AppUser;
-import com.urz.oproject.repository.UserRepository;
-import lombok.Getter;
+import com.sample.todoproject.model.AppUser;
+import com.sample.todoproject.repository.UserRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,17 @@ public class UserService {
         List<AppUser> appUsers = userRepository.findAll();
         return appUsers;
     }
-
     public AppUser addUser(AppUser appUser) {
         return userRepository.save(appUser);
     }
 
+//    public AppUser getAppUserByUsername(String username){
+//        return userRepository.findAppUserByUsername(username).get();
+//    }
+    public AppUser getAppUserByUsername(String username){
+        return userRepository.findAll().stream()
+                .filter(appUser -> appUser.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
 }

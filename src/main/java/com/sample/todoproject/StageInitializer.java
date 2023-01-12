@@ -1,11 +1,9 @@
-package com.urz.oproject;
+package com.sample.todoproject;
 
-import com.urz.oproject.ToDoApplication.StageReadyEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -17,7 +15,7 @@ import java.io.IOException;
 
 @Component
 public class StageInitializer implements ApplicationListener<ToDoApplication.StageReadyEvent> {
-    @Value("classpath:/Home.fxml")
+    @Value("classpath:/Login.fxml")
     private Resource toDoResource;
     private String applicationTitle;
     private ApplicationContext applicationContext;
@@ -29,18 +27,17 @@ public class StageInitializer implements ApplicationListener<ToDoApplication.Sta
     }
 
     @Override
-    public void onApplicationEvent(StageReadyEvent event) {
+    public void onApplicationEvent(ToDoApplication.StageReadyEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(toDoResource.getURL());
             fxmlLoader.setControllerFactory(aClass -> applicationContext.getBean(aClass));
+            System.setProperty("prism.lcdtext", "false");
             Parent parent = fxmlLoader.load();
             Stage stage = event.getStage();
-            stage.setTitle(applicationTitle);
             Scene scene = new Scene(parent);
-            scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            stage.setTitle(applicationTitle);
             stage.setScene(scene);
-            stage.setMinWidth(1070);
-            stage.setMinHeight(800);
+            scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);

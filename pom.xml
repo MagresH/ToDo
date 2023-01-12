@@ -41,13 +41,6 @@
             <artifactId>fontawesomefx-fontawesome</artifactId>
             <version>4.7.0-9.1.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/de.jensd/fontawesomefx -->
-<!--        <dependency>-->
-<!--            <groupId>de.jensd</groupId>-->
-<!--            <artifactId>fontawesomefx</artifactId>-->
-<!--            <version>8.2</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -70,6 +63,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -149,7 +143,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.urz.oproject/com.urz.oproject.OProjectApplication</mainClass>
+                            <mainClass>com.urz.oproject/com.sample.todoproject.ToDoProjectApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

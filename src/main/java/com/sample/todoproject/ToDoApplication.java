@@ -1,4 +1,4 @@
-package com.urz.oproject;
+package com.sample.todoproject;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -18,7 +18,7 @@ public class ToDoApplication extends Application {
 
     @Override
     public void init() {
-        applicationContext = new SpringApplicationBuilder(OProjectApplication.class).run();
+        applicationContext = new SpringApplicationBuilder(ToDoProjectApplication.class).run();
     }
 
     @Override

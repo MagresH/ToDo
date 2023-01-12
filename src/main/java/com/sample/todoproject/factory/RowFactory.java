@@ -1,10 +1,10 @@
-package com.urz.oproject.factory;
+package com.sample.todoproject.factory;
 
-import com.urz.oproject.model.Task;
+import com.sample.todoproject.model.Task;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
-import org.springframework.stereotype.Component;
+
 public class RowFactory {
     public static Callback<TableView<Task>, TableRow<Task>> getRowFactoryCallback(TableView<Task> tbl){
         return RowFactory::rowFactory;

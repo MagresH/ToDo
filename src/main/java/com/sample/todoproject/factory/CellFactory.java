@@ -1,8 +1,8 @@
-package com.urz.oproject.factory;
+package com.sample.todoproject.factory;
 
-import com.urz.oproject.controller.ToDoController;
-import com.urz.oproject.model.Task;
-import com.urz.oproject.service.TaskService;
+import com.sample.todoproject.model.Task;
+import com.sample.todoproject.service.TaskService;
+import com.sample.todoproject.controller.ToDoController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Insets;
@@ -14,8 +14,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 public class CellFactory {
     private final ToDoController toDoController;

@@ -1,10 +1,9 @@
-package com.urz.oproject.repository;
+package com.sample.todoproject.repository;
 
-import com.urz.oproject.model.AppUser;
-import com.urz.oproject.model.Task;
+import com.sample.todoproject.model.Task;
+import com.sample.todoproject.model.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 

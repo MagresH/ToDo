@@ -6,6 +6,7 @@
     -fx-background-radius:14 14 0 0;
     -fx-text-alignment: center;
     -fx-alignment: center;
+    -fx-font-size: 13px;
     }
 .table-view .column-header-background{
         -fx-background-color: white;

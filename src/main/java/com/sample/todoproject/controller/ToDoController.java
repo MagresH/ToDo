@@ -1,12 +1,12 @@
-package com.urz.oproject.controller;
+package com.sample.todoproject.controller;
 
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextArea;
-import com.urz.oproject.factory.CellFactory;
-import com.urz.oproject.factory.RowFactory;
-import com.urz.oproject.model.Task;
-import com.urz.oproject.service.TaskService;
+import com.sample.todoproject.factory.CellFactory;
+import com.sample.todoproject.factory.RowFactory;
+import com.sample.todoproject.helpers.TaskListType;
+import com.sample.todoproject.model.Task;
+import com.sample.todoproject.service.TaskService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.SimpleObjectProperty;
@@ -22,8 +22,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +36,7 @@ import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @Controller
 public class ToDoController implements Initializable {
@@ -44,22 +45,23 @@ public class ToDoController implements Initializable {
     @FXML
     AnchorPane anchorPane;
     @FXML
-    private Label totalTaskLabel, completedTaskLabel, toDoTask;
+    private Label totalTaskLabel, completedTaskLabel, toDoTask, taskListLabel;
     @FXML
-    private JFXButton btnOverview, btnTrash, btnSignout, addTaskButton;
+    private JFXButton todayTasksButton, trashButton, logoutButton, allTasksButton, importantTasksButton, addTaskButton;
     @FXML
     private AnchorPane pnlOverview, pnlTrash;
     @FXML
-    private JFXTextArea search;
+    private TextField search;
     @FXML
     private TableView<Task> toDoTableView, doneTableView, trashTableView;
     @FXML
     private TableColumn<Task, String> toDoDescColumn;
 
     @FXML
+
     private TableColumn<Task, Task> toDoCustomColumn;
     @FXML
-    private TableColumn<Task, Task> deadLineDateColumn;
+    private TableColumn<Task, LocalDate> deadLineDateColumn;
     @FXML
     private ObservableList<Task> toDoTaskList, doneTaskList;
     private final TaskService taskService;
@@ -69,7 +71,7 @@ public class ToDoController implements Initializable {
 
     @Autowired
     public ToDoController(TaskService taskService, ApplicationContext applicationContext) {
-        this.cellFactory = new CellFactory(this,taskService);
+        this.cellFactory = new CellFactory(this, taskService);
         this.taskService = taskService;
         this.applicationContext = applicationContext;
     }
@@ -96,7 +98,6 @@ public class ToDoController implements Initializable {
         toDoCustomColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
 
 
-
         toDoTableView.getStyleClass().add("noheader");
         toDoTableView.setItems(toDoTaskList);
         toDoTableView.setRowFactory(RowFactory.getRowFactoryCallback(toDoTableView));
@@ -110,21 +111,32 @@ public class ToDoController implements Initializable {
     }
 
     public void refreshTable() {
-        toDoTaskList = FXCollections.observableList(taskService.getTodayTasks());
+        TaskListType taskListType = taskService.getCurrentTaskListType();
+
+        if (taskListType.equals(TaskListType.TODAY))
+            toDoTaskList = FXCollections.observableList(taskService.getTodayTasks());
+        else if (taskListType.equals(TaskListType.ALL))
+            toDoTaskList = FXCollections.observableList(taskService.getAllTasks());
+        else if (taskListType.equals(TaskListType.IMPORTANT))
+            toDoTaskList = FXCollections.observableList(taskService.getImportantTasks());
+
         toDoTaskList = getSortedList();
         totalTaskLabel.setText(String.valueOf(toDoTaskList.size()));
         completedTaskLabel.setText(String.valueOf(toDoTaskList.stream().filter(Task::getTaskStatus).count()));
         toDoTask.setText(String.valueOf(toDoTaskList.stream().filter(task -> !task.getTaskStatus()).count()));
+
         toDoTableView.setItems(toDoTaskList);
         toDoTableView.refresh();
         toDoTableView.getSelectionModel().clearSelection();
     }
+
     private SortedList<Task> getSortedList() {
         SortedList<Task> sortedList = new SortedList<>(getFilteredList());
         sortedList.comparatorProperty().bind(toDoTableView.comparatorProperty());
         toDoTableView.refresh();
         return sortedList;
     }
+
     private FilteredList<Task> getFilteredList() {
         FilteredList<Task> filteredList = new FilteredList<>(toDoTaskList, b -> true);
         search.textProperty().addListener((observable, oldValue, newValue) ->
@@ -135,31 +147,56 @@ public class ToDoController implements Initializable {
                     }
                     toDoTableView.refresh();
                     String lowerCaseFilter = newValue.toLowerCase();
-
                     if (task.getDescription().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
                     } else return task.getDeadLineDate().toString().contains(lowerCaseFilter);
                 }));
         return filteredList;
     }
+
     public void handleClicks(ActionEvent actionEvent) {
 
-        if (actionEvent.getSource() == btnOverview) {
-            System.out.println("overview");
-            pnlOverview.toFront();
-        }
-
-        if (actionEvent.getSource() == btnTrash) {
-            trashTableView.setItems(doneTableView.getItems());
-            pnlTrash.toFront();
-        }
-        if (actionEvent.getSource() == addTaskButton) {
-            System.out.println("test");
+        if (actionEvent.getSource() == todayTasksButton) {
+            taskListLabel.setText("Today Tasks");
+            taskService.setCurrentTaskListType(TaskListType.TODAY);
+            refreshTable();
+        } else if (actionEvent.getSource() == allTasksButton) {
+            taskListLabel.setText("All Tasks");
+            taskService.setCurrentTaskListType(TaskListType.ALL);
+            refreshTable();
+        } else if (actionEvent.getSource() == importantTasksButton) {
+            taskListLabel.setText("Important Tasks");
+            taskService.setCurrentTaskListType(TaskListType.IMPORTANT);
+            refreshTable();
+        } else if (actionEvent.getSource() == trashButton) {
+            //   trashTableView.setItems(doneTableView.getItems());
+        } else if (actionEvent.getSource() == addTaskButton) {
             onAddButtonClick();
         }
 
     }
+    public void onLogout(){
+        anchorPane.setEffect(new GaussianBlur());
+        Alert alert = new Alert(Alert.AlertType.NONE, "Do you want to logout?", ButtonType.YES,ButtonType.CANCEL);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.YES) {
+            try {
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setControllerFactory(applicationContext::getBean);
+                fxmlLoader.setLocation(getClass().getResource("/Login.fxml"));
+                stage.setScene(new Scene(fxmlLoader.load()));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+                Stage currentStage = (Stage) anchorPane.getScene().getWindow();
+                currentStage.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else anchorPane.setEffect(null);
 
+    }
     public void onEditIconClick(Task task) {
         taskService.setSelectedTask(task);
         try {
@@ -194,11 +231,9 @@ public class ToDoController implements Initializable {
         if (task.getImportantStatus()) {
             starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
             task.setImportantStatus(false);
-            System.out.println("on na off");
         } else {
             starIcon.setIcon(FontAwesomeIcon.STAR);
             task.setImportantStatus(true);
-            System.out.println("off na on");
         }
         taskService.editTask(task);
         refreshTable();

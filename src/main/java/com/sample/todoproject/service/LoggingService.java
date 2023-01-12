@@ -1,4 +1,4 @@
-package com.urz.oproject.service;
+package com.sample.todoproject.service;
 
 import org.springframework.stereotype.Service;
 

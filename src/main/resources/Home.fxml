@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextArea?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
@@ -10,6 +9,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,14 +19,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1050.0" style="-fx-background-color: #325f61;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.urz.oproject.controller.ToDoController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1050.0" style="-fx-background-color: #325f61;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sample.todoproject.controller.ToDoController">
    <stylesheets>
       <URL value="@tableview.css" />
    </stylesheets>
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="702.0" prefWidth="256.0" style="-fx-background-color: #1C3738;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <JFXButton id="hbox-button" fx:id="btnOverview" contentDisplay="CENTER" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Today" textFill="WHITE">
+            <JFXButton id="hbox-button" fx:id="todayTasksButton" contentDisplay="CENTER" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Today" textFill="WHITE">
                <VBox.margin>
                   <Insets top="100.0" />
                </VBox.margin>
@@ -34,22 +34,22 @@
                   <FontAwesomeIconView fill="WHITE" glyphName="HOME" size="8" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="btnOrders" contentDisplay="CENTER" layoutX="10.0" layoutY="595.0" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="All tasks" textFill="WHITE">
+            <JFXButton fx:id="allTasksButton" contentDisplay="CENTER" layoutX="10.0" layoutY="595.0" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="All tasks" textFill="WHITE">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="LIST" text="" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="btnCustomers" contentDisplay="CENTER" layoutX="10.0" layoutY="525.0" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Important" textFill="WHITE">
+            <JFXButton fx:id="importantTasksButton" contentDisplay="CENTER" layoutX="10.0" layoutY="525.0" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Important" textFill="WHITE">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="STAR" text="" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="btnTrash" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="644.0" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Trash" textFill="WHITE">
+            <JFXButton fx:id="trashButton" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="644.0" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Trash" textFill="WHITE">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="TRASH" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="btnSignout" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Logout" textFill="WHITE">
+            <JFXButton fx:id="logoutButton" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" onAction="#onLogout" prefHeight="70.0" prefWidth="256.0" stylesheets="@style.css" text="Logout" textFill="WHITE">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="POWER_OFF" wrappingWidth="130.0" />
                </graphic>
@@ -61,7 +61,7 @@
       </VBox>
       <StackPane layoutX="258.0" style="-fx-background-color: black;" stylesheets="@style.css" AnchorPane.bottomAnchor="-0.39999999999997726" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="0.0">
          <children>
-          <AnchorPane fx:id="pnlOverview" prefHeight="200.0" prefWidth="790.0" style="-fx-background-color: white;" StackPane.alignment="CENTER">
+          <AnchorPane fx:id="pnlOverview" prefHeight="200.0" prefWidth="790.0" style="-fx-background-color: white;" stylesheets="@style.css" StackPane.alignment="CENTER">
                <children>
                   <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="4.0" layoutY="175.0" prefHeight="460.0" prefWidth="786.0" style="-fx-background-color: white; -fx-background-insets: 0-0-0-0;" stylesheets="@style.css" AnchorPane.bottomAnchor="68.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="175.0">
                      <columns>
@@ -73,7 +73,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <Label layoutX="33.0" layoutY="34.0" style="-fx-font-smoothing-type: lcd;" text="Today Tasks" textFill="#1c3738">
+                  <Label fx:id="taskListLabel" layoutX="33.0" layoutY="34.0" style="-fx-font-smoothing-type: lcd;" text="Today Tasks" textFill="#1c3738">
                      <font>
                         <Font name="System Bold" size="35.0" />
                      </font>
@@ -113,9 +113,19 @@
                      </children>
                   </HBox>
                   <Separator layoutX="33.0" layoutY="72.0" prefHeight="38.0" prefWidth="540.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="221.0" AnchorPane.topAnchor="72.0" />
-                  <JFXButton fx:id="addTaskButton" layoutX="5.0" layoutY="645.0" onAction="#onAddButtonClick" opacity="0.97" prefHeight="55.0" prefWidth="786.0" text="Add new task" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="3.0" />
-                  <JFXTextArea fx:id="search" layoutX="543.0" layoutY="41.0" prefHeight="37.0" prefWidth="223.0" />
-                  <FontAwesomeIconView glyphName="SEARCH" layoutX="506.0" layoutY="75.0" style="-glyph-size: 7;" />
+                  <JFXButton fx:id="addTaskButton" layoutX="8.0" layoutY="645.0" onAction="#onAddButtonClick" opacity="0.97" prefHeight="55.0" prefWidth="777.0" text="Add new task" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="9.0">
+                     <effect>
+                        <DropShadow spread="0.13" />
+                     </effect></JFXButton>
+                  <FontAwesomeIconView fill="#1c3738" glyphName="SEARCH" layoutX="597.0" layoutY="96.0" size="11" AnchorPane.rightAnchor="171.0">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </FontAwesomeIconView>
+                  <TextField fx:id="search" layoutX="648.0" layoutY="73.0" prefHeight="28.0" prefWidth="156.0" promptText="Search" style="-fx-text-box-border: transparent; -fx-focus-color: #1C3738; -fx-border-radius: 4; -fx-border-color: #1C3738; -fx-background-radius: 4; -fx-region-background: #FFFF;" AnchorPane.rightAnchor="7.0">
+                     <font>
+                        <Font name="Verdana" size="12.0" />
+                     </font></TextField>
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" visible="false" />

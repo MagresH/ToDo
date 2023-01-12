@@ -1,9 +1,9 @@
-package com.urz.oproject.controller;
+package com.sample.todoproject.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
-import com.urz.oproject.model.Task;
-import com.urz.oproject.service.TaskService;
+import com.sample.todoproject.model.Task;
+import com.sample.todoproject.service.TaskService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,12 +12,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Controller

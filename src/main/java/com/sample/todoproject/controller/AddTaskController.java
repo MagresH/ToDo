@@ -1,10 +1,10 @@
-package com.urz.oproject.controller;
+package com.sample.todoproject.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
-import com.urz.oproject.model.Task;
-import com.urz.oproject.service.TaskService;
-import com.urz.oproject.service.UserService;
+import com.sample.todoproject.model.Task;
+import com.sample.todoproject.service.UserService;
+import com.sample.todoproject.service.TaskService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
