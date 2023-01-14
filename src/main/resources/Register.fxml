@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="500.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sample.todoproject.controller.RegisterController">
+    <children>
+        <AnchorPane id="login" layoutX="-1.0" prefHeight="500.0" prefWidth="379.0" style="-fx-background-color: linear-gradient(rgb(28, 55, 56), rgba(28, 55, 56, 0.34));;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label alignment="CENTER" layoutX="35.0" layoutY="154.0" prefHeight="96.0" prefWidth="189.0" text="ToDo" textFill="WHITE" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="154.0">
+                    <font>
+                        <Font name="System Bold" size="37.0" />
+                    </font>
+                </Label>
+            <Label layoutX="102.0" layoutY="236.0" prefHeight="71.0" prefWidth="176.0" text="Let us help with your work" textFill="WHITE" AnchorPane.bottomAnchor="193.0" AnchorPane.leftAnchor="102.0" AnchorPane.rightAnchor="101.0" AnchorPane.topAnchor="236.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="378.0" layoutY="-7.0" prefHeight="500.0" prefWidth="440.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="378.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-7.0">
+         <children>
+            <Label alignment="CENTER" cacheShape="false" centerShape="false" layoutX="129.0" layoutY="27.0" prefHeight="55.0" prefWidth="187.0" scaleShape="false" style="-fx-font-smoothing-type: gray;" text="SIGN UP" AnchorPane.bottomAnchor="418.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="124.0" AnchorPane.topAnchor="27.0">
+               <font>
+                  <Font name="System Bold" size="39.0" />
+               </font>
+            </Label>
+            <TextField fx:id="usernameField" layoutX="91.0" layoutY="109.0" prefHeight="44.0" prefWidth="302.0" promptText="Username" AnchorPane.bottomAnchor="348.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="85.0" />
+            <TextField fx:id="firstNameField" layoutX="90.0" layoutY="163.0" prefHeight="44.0" prefWidth="264.0" promptText="First name" AnchorPane.bottomAnchor="294.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="86.0" />
+            <TextField fx:id="lastNameField" layoutX="91.0" layoutY="220.0" prefHeight="44.0" prefWidth="264.0" promptText="Last name" AnchorPane.bottomAnchor="237.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="85.0" />
+            <PasswordField fx:id="passwordField" layoutX="91.0" layoutY="278.0" prefHeight="44.0" prefWidth="264.0" promptText="Password" AnchorPane.bottomAnchor="179.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="85.0" />
+            <PasswordField fx:id="repeatPasswordField" layoutX="91.0" layoutY="333.0" prefHeight="44.0" prefWidth="264.0" promptText="Repeat password" AnchorPane.bottomAnchor="124.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="85.0" />
+            <JFXButton fx:id="registerButton" layoutX="151.0" layoutY="398.0" onAction="#onRegisterButtonClick" prefHeight="55.0" prefWidth="181.0" stylesheets="@style.css" text="Register" AnchorPane.bottomAnchor="47.80000000000001" AnchorPane.leftAnchor="151.0" AnchorPane.rightAnchor="146.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="Verdana" size="17.0" />
+               </font>
+            </JFXButton>
+            <Label layoutX="129.0" layoutY="468.0" text="Already have an account?" />
+            <JFXButton fx:id="loginButton" layoutX="268.0" layoutY="464.0" onAction="#onLoginButtonClick" style="-fx-background-color: transparent; -fx-text-fill: black;" text="Login" underline="true">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>

@@ -6,16 +6,13 @@ import com.sample.todoproject.controller.ToDoController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Insets;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
-public class CellFactory {
+public class CustomCellFactory {
     private final ToDoController toDoController;
     private final TaskService taskService;
     Callback<TableColumn<Task, Task>, TableCell<Task, Task>> cellFactory;
@@ -24,10 +21,10 @@ public class CellFactory {
         return cellFactory;
     }
 
-    public CellFactory(ToDoController toDoController, TaskService taskService) {
+    public CustomCellFactory(ToDoController toDoController, TaskService taskService, TableView<Task> toDoTableView) {
         this.taskService = taskService;
         this.toDoController = toDoController;
-        this.cellFactory = param -> new TableCell<Task, Task>() {
+        this.cellFactory = param -> new TableCell<>() {
             @Override
             public void updateItem(Task item, boolean empty) {
                 super.updateItem(item, empty);
@@ -53,28 +50,28 @@ public class CellFactory {
                     MenuItem mi1 = new MenuItem("DELETE TASK");
                     contextMenu.getItems().add(mi1);
                     mi1.setOnAction(event -> {
-                        taskService.deleteTask(toDoController.getSelectedTask(toDoController.getToDoTableView()));
+                        taskService.deleteTask(toDoTableView.getSelectionModel().getSelectedItem());
                         toDoController.refreshTable();
                     });
 
-                    toDoController.getToDoTableView().setOnMouseClicked((MouseEvent event) -> {
+                    toDoTableView.setOnMouseClicked((MouseEvent event) -> {
                         if (event.getButton() == MouseButton.SECONDARY) {
-                            contextMenu.show(toDoController.getToDoTableView(), event.getScreenX(), event.getScreenY());
+                            contextMenu.show(toDoTableView, event.getScreenX(), event.getScreenY());
                         }
-                        if ((event.getClickCount() == 2) && (toDoController.getSelectedTask(toDoController.getToDoTableView()) != null))
-                            toDoController.onEditIconClick(toDoController.getSelectedTask(toDoController.getToDoTableView()));
+                        if ((event.getClickCount() == 2) && (toDoTableView.getSelectionModel().getSelectedItem() != null))
+                            toDoController.onEditIconClick(toDoTableView.getSelectionModel().getSelectedItem());
                     });
 
                     checkIcon.setOnMouseClicked((MouseEvent event) -> {
-                        toDoController.onCheckIconClick(checkIcon, toDoController.getSelectedTask(toDoController.getToDoTableView()));
+                        toDoController.onCheckIconClick(checkIcon, toDoTableView.getSelectionModel().getSelectedItem());
                     });
 
                     editIcon.setOnMouseClicked((MouseEvent event) -> {
-                        toDoController.onEditIconClick(toDoController.getSelectedTask(toDoController.getToDoTableView()));
+                        toDoController.onEditIconClick(toDoTableView.getSelectionModel().getSelectedItem());
                     });
 
                     starIcon.setOnMouseClicked((MouseEvent event) -> {
-                        toDoController.onStarIconClick(starIcon, toDoController.getSelectedTask(toDoController.getToDoTableView()));
+                        toDoController.onStarIconClick(starIcon, toDoTableView.getSelectionModel().getSelectedItem());
                     });
 
                     HBox managebtn = new HBox(starIcon, editIcon, checkIcon);

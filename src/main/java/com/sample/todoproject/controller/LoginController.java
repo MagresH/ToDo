@@ -103,4 +103,17 @@ public class LoginController implements Initializable {
         }
         return false;
     }
+    public void onSignUpButtonClick() throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(applicationContext::getBean);
+        fxmlLoader.setLocation(getClass().getResource("/Register.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setScene(scene);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        System.setProperty("prism.lcdtext", "false");
+        stage.show();
+        Stage currentStage = (Stage) anchorPane.getScene().getWindow();
+        currentStage.close();
+    }
 }

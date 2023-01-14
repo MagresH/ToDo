@@ -2,9 +2,9 @@ package com.sample.todoproject.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,11 +12,11 @@ import java.util.List;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
-@Data
 @Entity
 @Table(name = "AppUser")
-@Builder
 public class AppUser implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
@@ -49,7 +49,54 @@ public class AppUser implements Serializable {
     @OneToMany(mappedBy = "appUser")
     private List<Trash> trashItems;
 
+    public static AppUserBuilder builder() {
+        return new AppUserBuilder();
+    }
 
 
+    public static class AppUserBuilder {
+        private Long id;
+        private String firstName;
+        private String lastName;
+        private String username;
+        private String password;
+        private List<Task> tasks;
+        private List<Trash> trashItems;
 
+        public AppUserBuilder() {
+        }
+
+        public AppUserBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AppUserBuilder firstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public AppUserBuilder lastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public AppUserBuilder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public AppUserBuilder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public AppUser build() {
+            return new AppUser(id, firstName, lastName, username, password, tasks, trashItems);
+        }
+
+        public String toString() {
+            return "AppUser.AppUserBuilder(id=" + this.id + ", firstName=" + this.firstName + ", lastName=" + this.lastName + ", username=" + this.username + ", password=" + this.password + ", tasks=" + this.tasks + ", trashItems=" + this.trashItems + ")";
+        }
+    }
 }

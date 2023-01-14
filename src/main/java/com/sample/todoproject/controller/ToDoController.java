@@ -2,7 +2,7 @@ package com.sample.todoproject.controller;
 
 
 import com.jfoenix.controls.JFXButton;
-import com.sample.todoproject.factory.CellFactory;
+import com.sample.todoproject.factory.CustomCellFactory;
 import com.sample.todoproject.factory.RowFactory;
 import com.sample.todoproject.helpers.TaskListType;
 import com.sample.todoproject.model.Task;
@@ -22,7 +22,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -53,25 +52,21 @@ public class ToDoController implements Initializable {
     @FXML
     private TextField search;
     @FXML
-    private TableView<Task> toDoTableView, doneTableView, trashTableView;
+    private TableView<Task> toDoTableView, trashTableView;
     @FXML
     private TableColumn<Task, String> toDoDescColumn;
-
     @FXML
-
     private TableColumn<Task, Task> toDoCustomColumn;
     @FXML
     private TableColumn<Task, LocalDate> deadLineDateColumn;
     @FXML
-    private ObservableList<Task> toDoTaskList, doneTaskList;
+    private ObservableList<Task> toDoTaskList;
     private final TaskService taskService;
     private final ApplicationContext applicationContext;
-    private final CellFactory cellFactory;
 
 
     @Autowired
     public ToDoController(TaskService taskService, ApplicationContext applicationContext) {
-        this.cellFactory = new CellFactory(this, taskService);
         this.taskService = taskService;
         this.applicationContext = applicationContext;
     }
@@ -80,6 +75,7 @@ public class ToDoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         pnlOverview.toFront();        //Moving main panel to front
+        refreshTable();
 
         //Description column
         toDoDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -92,6 +88,7 @@ public class ToDoController implements Initializable {
         deadLineDateColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.2));
 
         //Custom column
+        CustomCellFactory cellFactory = new CustomCellFactory(this, taskService, toDoTableView);
         toDoCustomColumn.setCellFactory(cellFactory.getCellFactory());
         toDoCustomColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         toDoCustomColumn.minWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
@@ -106,8 +103,7 @@ public class ToDoController implements Initializable {
     }
 
     public Task getSelectedTask(TableView<Task> tableView) {
-        Task task = tableView.getSelectionModel().getSelectedItem();
-        return task;
+        return tableView.getSelectionModel().getSelectedItem();
     }
 
     public void refreshTable() {
@@ -169,12 +165,10 @@ public class ToDoController implements Initializable {
             taskService.setCurrentTaskListType(TaskListType.IMPORTANT);
             refreshTable();
         } else if (actionEvent.getSource() == trashButton) {
-            //   trashTableView.setItems(doneTableView.getItems());
-        } else if (actionEvent.getSource() == addTaskButton) {
-            onAddButtonClick();
         }
 
     }
+    @FXML
     public void onLogout(){
         anchorPane.setEffect(new GaussianBlur());
         Alert alert = new Alert(Alert.AlertType.NONE, "Do you want to logout?", ButtonType.YES,ButtonType.CANCEL);
@@ -197,13 +191,13 @@ public class ToDoController implements Initializable {
         else anchorPane.setEffect(null);
 
     }
-    public void onEditIconClick(Task task) {
-        taskService.setSelectedTask(task);
+    @FXML
+    public void onAddButtonClick() {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setControllerFactory(applicationContext::getBean);
-            fxmlLoader.setLocation(getClass().getResource("/EditTask.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("/AddTask.fxml"));
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
             stage.setOnHiding(hideEvent -> refreshTable());
@@ -212,13 +206,13 @@ public class ToDoController implements Initializable {
         }
     }
 
-    @FXML
-    private void onAddButtonClick() {
+    public void onEditIconClick(Task task) {
+        taskService.setSelectedTask(task);
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setControllerFactory(applicationContext::getBean);
-            fxmlLoader.setLocation(getClass().getResource("/AddTask.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("/EditTask.fxml"));
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
             stage.setOnHiding(hideEvent -> refreshTable());
@@ -249,10 +243,6 @@ public class ToDoController implements Initializable {
         }
         taskService.editTask(task);
         refreshTable();
-    }
-
-    public TableView<Task> getToDoTableView() {
-        return toDoTableView;
     }
 
 }

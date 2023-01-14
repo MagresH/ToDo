@@ -61,7 +61,6 @@ public class AddTaskController implements Initializable {
                 newTask.setImportantStatus(importantCheckBox.isSelected());
                 newTask.setTaskStatus(false);
                 newTask.setAppUser(UserService.loggedUser);
-                System.out.println("test");
                 taskService.addTask(newTask);
                 Stage stage = (Stage) btnApply.getScene().getWindow();
                 stage.close();
