@@ -1,7 +1,10 @@
 package com.sample.todoproject.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -40,4 +43,51 @@ public class Task implements Serializable {
         this.appUser = appUser;
     }
 
+    public static TaskBuilder builder() {
+        return new TaskBuilder();
+    }
+
+    public static class TaskBuilder {
+        private Long id;
+        private String description;
+        private LocalDate deadLineDate;
+        private Boolean taskStatus;
+        private Boolean importantStatus;
+        private AppUser appUser;
+
+        public TaskBuilder() {
+        }
+        public TaskBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public TaskBuilder deadLineDate(LocalDate deadLineDate) {
+            this.deadLineDate = deadLineDate;
+            return this;
+        }
+
+        public TaskBuilder taskStatus(Boolean taskStatus) {
+            this.taskStatus = taskStatus;
+            return this;
+        }
+
+        public TaskBuilder importantStatus(Boolean importantStatus) {
+            this.importantStatus = importantStatus;
+            return this;
+        }
+
+        public TaskBuilder appUser(AppUser appUser) {
+            this.appUser = appUser;
+            return this;
+        }
+
+        public Task build() {
+            return new Task(description, deadLineDate, taskStatus, importantStatus, appUser);
+        }
+
+        public String toString() {
+            return "Task.TaskBuilder(id=" + this.id + ", description=" + this.description + ", deadLineDate=" + this.deadLineDate + ", taskStatus=" + this.taskStatus + ", importantStatus=" + this.importantStatus + ", appUser=" + this.appUser + ")";
+        }
+    }
 }

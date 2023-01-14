@@ -27,9 +27,6 @@ public class UserService {
         return userRepository.save(appUser);
     }
 
-//    public AppUser getAppUserByUsername(String username){
-//        return userRepository.findAppUserByUsername(username).get();
-//    }
     public AppUser getAppUserByUsername(String username){
         return userRepository.findAll().stream()
                 .filter(appUser -> appUser.getUsername().equals(username))

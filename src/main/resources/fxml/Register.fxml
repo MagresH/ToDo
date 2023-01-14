@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="anchorPane" prefHeight="500.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sample.todoproject.controller.RegisterController">
     <children>
-        <AnchorPane id="login" layoutX="-1.0" prefHeight="500.0" prefWidth="379.0" style="-fx-background-color: linear-gradient(rgb(28, 55, 56), rgba(28, 55, 56, 0.34));;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane id="login" layoutX="-1.0" prefHeight="500.0" prefWidth="379.0" style="-fx-background-color: linear-gradient(rgb(28, 55, 56), rgba(28, 55, 56, 0.34));;" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Label alignment="CENTER" layoutX="35.0" layoutY="154.0" prefHeight="96.0" prefWidth="189.0" text="ToDo" textFill="WHITE" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="154.0">
                     <font>
@@ -36,7 +36,7 @@
             <TextField fx:id="lastNameField" layoutX="91.0" layoutY="220.0" prefHeight="44.0" prefWidth="264.0" promptText="Last name" AnchorPane.bottomAnchor="237.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="85.0" />
             <PasswordField fx:id="passwordField" layoutX="91.0" layoutY="278.0" prefHeight="44.0" prefWidth="264.0" promptText="Password" AnchorPane.bottomAnchor="179.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="85.0" />
             <PasswordField fx:id="repeatPasswordField" layoutX="91.0" layoutY="333.0" prefHeight="44.0" prefWidth="264.0" promptText="Repeat password" AnchorPane.bottomAnchor="124.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="85.0" />
-            <JFXButton fx:id="registerButton" layoutX="151.0" layoutY="398.0" onAction="#onRegisterButtonClick" prefHeight="55.0" prefWidth="181.0" stylesheets="@style.css" text="Register" AnchorPane.bottomAnchor="47.80000000000001" AnchorPane.leftAnchor="151.0" AnchorPane.rightAnchor="146.0">
+            <JFXButton fx:id="registerButton" layoutX="151.0" layoutY="398.0" onAction="#onRegisterButtonClick" prefHeight="55.0" prefWidth="181.0" stylesheets="@../css/style.css" text="Register" AnchorPane.bottomAnchor="47.80000000000001" AnchorPane.leftAnchor="151.0" AnchorPane.rightAnchor="146.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

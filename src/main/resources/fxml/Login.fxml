@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="anchorPane" prefHeight="500.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sample.todoproject.controller.LoginController">
     <children>
-        <AnchorPane id="login" layoutX="-1.0" prefHeight="500.0" prefWidth="379.0" style="-fx-background-color: linear-gradient(rgb(28, 55, 56), rgba(28, 55, 56, 0.34));;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane id="login" layoutX="-1.0" prefHeight="500.0" prefWidth="379.0" style="-fx-background-color: linear-gradient(rgb(28, 55, 56), rgba(28, 55, 56, 0.34));;" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Label alignment="CENTER" layoutX="35.0" layoutY="154.0" prefHeight="96.0" prefWidth="189.0" text="ToDo" textFill="WHITE" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="154.0">
                     <font>
@@ -33,7 +33,7 @@
             </Label>
             <TextField fx:id="usernameField" layoutX="89.0" layoutY="178.0" prefHeight="44.0" prefWidth="302.0" promptText="Username" AnchorPane.bottomAnchor="278.0" AnchorPane.leftAnchor="89.0" AnchorPane.rightAnchor="87.0" />
             <PasswordField fx:id="passwordField" layoutX="89.0" layoutY="250.0" prefHeight="44.0" prefWidth="302.0" promptText="Password" AnchorPane.bottomAnchor="206.0" AnchorPane.leftAnchor="89.0" AnchorPane.rightAnchor="87.0" />
-            <JFXButton fx:id="loginButton" layoutX="150.0" layoutY="360.0" onAction="#onLoginButtonClick" prefHeight="55.0" prefWidth="181.0" stylesheets="@style.css" text="Login" AnchorPane.bottomAnchor="85.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="147.0">
+            <JFXButton fx:id="loginButton" layoutX="150.0" layoutY="344.0" onAction="#onLoginButtonClick" prefHeight="55.0" prefWidth="181.0" stylesheets="@../css/style.css" text="Login" AnchorPane.bottomAnchor="100.80000000000001" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="147.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -47,6 +47,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXButton>
+            <JFXButton fx:id="guestButton" layoutX="347.0" layoutY="468.0" onAction="#onGuestButtonClick" style="-fx-background-color: transparent; -fx-text-fill: black;" text="Login as guest" underline="true" />
          </children>
         </AnchorPane>
     </children>

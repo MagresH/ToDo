@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class StageInitializer implements ApplicationListener<ToDoApplication.StageReadyEvent> {
-    @Value("classpath:/Login.fxml")
+public class StageInitializer implements ApplicationListener<ToDoFXApplication.StageReadyEvent> {
+    @Value("classpath:/fxml/Login.fxml")
     private Resource toDoResource;
     private String applicationTitle;
     private ApplicationContext applicationContext;
@@ -27,7 +27,7 @@ public class StageInitializer implements ApplicationListener<ToDoApplication.Sta
     }
 
     @Override
-    public void onApplicationEvent(ToDoApplication.StageReadyEvent event) {
+    public void onApplicationEvent(ToDoFXApplication.StageReadyEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(toDoResource.getURL());
             fxmlLoader.setControllerFactory(aClass -> applicationContext.getBean(aClass));
@@ -37,7 +37,7 @@ public class StageInitializer implements ApplicationListener<ToDoApplication.Sta
             Scene scene = new Scene(parent);
             stage.setTitle(applicationTitle);
             stage.setScene(scene);
-            scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);

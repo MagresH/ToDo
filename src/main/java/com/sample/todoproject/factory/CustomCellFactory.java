@@ -3,6 +3,7 @@ package com.sample.todoproject.factory;
 import com.sample.todoproject.model.Task;
 import com.sample.todoproject.service.TaskService;
 import com.sample.todoproject.controller.ToDoController;
+import com.sample.todoproject.service.TrashService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Insets;
@@ -15,15 +16,17 @@ import javafx.util.Callback;
 public class CustomCellFactory {
     private final ToDoController toDoController;
     private final TaskService taskService;
+    private final TrashService trashService;
     Callback<TableColumn<Task, Task>, TableCell<Task, Task>> cellFactory;
 
     public Callback<TableColumn<Task, Task>, TableCell<Task, Task>> getCellFactory() {
         return cellFactory;
     }
 
-    public CustomCellFactory(ToDoController toDoController, TaskService taskService, TableView<Task> toDoTableView) {
+    public CustomCellFactory(ToDoController toDoController, TaskService taskService, TableView<Task> toDoTableView, TrashService trashService) {
         this.taskService = taskService;
         this.toDoController = toDoController;
+        this.trashService = trashService;
         this.cellFactory = param -> new TableCell<>() {
             @Override
             public void updateItem(Task item, boolean empty) {
@@ -47,16 +50,35 @@ public class CustomCellFactory {
                     else starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
 
                     ContextMenu contextMenu = new ContextMenu();
-                    MenuItem mi1 = new MenuItem("DELETE TASK");
+                    MenuItem mi1 = new MenuItem("Mark as done");
+                    MenuItem mi2 = new MenuItem("Mark as important");
+                    MenuItem mi3 = new MenuItem("Edit task");
+                    MenuItem mi4 = new MenuItem("DELETE TASK");
                     contextMenu.getItems().add(mi1);
-                    mi1.setOnAction(event -> {
-                        taskService.deleteTask(toDoTableView.getSelectionModel().getSelectedItem());
-                        toDoController.refreshTable();
-                    });
+                    contextMenu.getItems().add(mi2);
+                    contextMenu.getItems().add(mi3);
+                    contextMenu.getItems().add(mi4);
 
+                    mi1.setOnAction(event -> {
+                        toDoController.onCheckIconClick(checkIcon, toDoTableView.getSelectionModel().getSelectedItem());
+                    });
+                    mi2.setOnAction(event -> {
+                        toDoController.onStarIconClick(checkIcon, toDoTableView.getSelectionModel().getSelectedItem());
+                    });
+                    mi3.setOnAction(event -> {
+                        toDoController.onEditIconClick(toDoTableView.getSelectionModel().getSelectedItem());
+                    });
+                    mi4.setOnAction(event -> {
+                        Task task = toDoTableView.getSelectionModel().getSelectedItem();
+                        System.out.println(task.getDescription());
+                        trashService.addTrash(task);
+                        taskService.deleteTask(task);
+                        toDoController.refreshTrashTable();
+                        toDoController.refreshToDoTable();
+                    });
                     toDoTableView.setOnMouseClicked((MouseEvent event) -> {
                         if (event.getButton() == MouseButton.SECONDARY) {
-                            contextMenu.show(toDoTableView, event.getScreenX(), event.getScreenY());
+                            contextMenu.show(toDoTableView.getScene().getWindow(), event.getScreenX(), event.getScreenY());
                         }
                         if ((event.getClickCount() == 2) && (toDoTableView.getSelectionModel().getSelectedItem() != null))
                             toDoController.onEditIconClick(toDoTableView.getSelectionModel().getSelectedItem());

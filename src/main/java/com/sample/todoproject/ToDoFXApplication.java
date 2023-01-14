@@ -7,7 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
-public class ToDoApplication extends Application {
+public class ToDoFXApplication extends Application {
 
     private ConfigurableApplicationContext applicationContext;
 

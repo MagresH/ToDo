@@ -66,11 +66,6 @@ public class AppUser implements Serializable {
         public AppUserBuilder() {
         }
 
-        public AppUserBuilder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
         public AppUserBuilder firstName(String firstName) {
             this.firstName = firstName;
             return this;
@@ -92,7 +87,7 @@ public class AppUser implements Serializable {
         }
 
         public AppUser build() {
-            return new AppUser(id, firstName, lastName, username, password, tasks, trashItems);
+            return new AppUser(firstName, lastName, username, password);
         }
 
         public String toString() {

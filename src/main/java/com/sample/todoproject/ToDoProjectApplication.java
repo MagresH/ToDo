@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ToDoProjectApplication {
 
     public static void main(String[] args) {
-        Application.launch(ToDoApplication.class,args);
+        Application.launch(ToDoFXApplication.class,args);
     }
 
 }

@@ -2,7 +2,6 @@ package com.sample.todoproject.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.sample.todoproject.model.AppUser;
-import com.sample.todoproject.service.TaskService;
 import com.sample.todoproject.service.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,10 +46,10 @@ public class RegisterController implements Initializable {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(applicationContext::getBean);
-        fxmlLoader.setLocation(getClass().getResource("/Login.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/fxml/Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
-        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
         System.setProperty("prism.lcdtext", "false");
         stage.show();
         Stage currentStage = (Stage) anchorPane.getScene().getWindow();

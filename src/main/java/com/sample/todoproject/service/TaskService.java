@@ -24,10 +24,12 @@ public class TaskService {
     @Setter
     TaskListType currentTaskListType = TaskListType.TODAY;
     private final TaskRepository taskRepository;
+    private final TrashService trashService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, TrashService trashService) {
         this.taskRepository = taskRepository;
+        this.trashService = trashService;
     }
 
     public List<Task> getAllTasks() {
