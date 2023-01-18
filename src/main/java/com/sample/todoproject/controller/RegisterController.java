@@ -2,7 +2,7 @@ package com.sample.todoproject.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.sample.todoproject.model.AppUser;
-import com.sample.todoproject.service.UserService;
+import com.sample.todoproject.service.AppUserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +22,7 @@ import java.util.*;
 @Controller
 public class RegisterController implements Initializable {
     private final ApplicationContext applicationContext;
-    private final UserService userService;
+    private final AppUserService userService;
     @FXML
     AnchorPane anchorPane;
     @FXML
@@ -32,7 +32,7 @@ public class RegisterController implements Initializable {
     @FXML
     JFXButton registerButton, loginButton;
 
-    public RegisterController(ApplicationContext applicationContext, UserService userService) {
+    public RegisterController(ApplicationContext applicationContext, AppUserService userService) {
         this.applicationContext = applicationContext;
         this.userService = userService;
     }
@@ -70,7 +70,7 @@ public class RegisterController implements Initializable {
                     .lastName(lastNameField.getText())
                     .password(passwordField.getText())
                     .build();
-            userService.addUser(user);
+            userService.addAppUser(user);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText("Account created!");
             alert.showAndWait();

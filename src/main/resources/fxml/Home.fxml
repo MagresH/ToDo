@@ -5,6 +5,7 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
@@ -26,7 +27,7 @@
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="702.0" prefWidth="256.0" style="-fx-background-color: #1C3738;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <JFXButton id="hbox-button" fx:id="todayTasksButton" contentDisplay="CENTER" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="Today" textFill="WHITE">
+            <JFXButton id="hbox-button" fx:id="todayTasksButton" contentDisplay="CENTER" onAction="#onMenuItemClick" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="Today" textFill="WHITE">
                <VBox.margin>
                   <Insets top="100.0" />
                </VBox.margin>
@@ -34,17 +35,17 @@
                   <FontAwesomeIconView fill="WHITE" glyphName="HOME" size="8" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="allTasksButton" contentDisplay="CENTER" layoutX="10.0" layoutY="595.0" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="All tasks" textFill="WHITE">
+            <JFXButton fx:id="allTasksButton" contentDisplay="CENTER" layoutX="10.0" layoutY="595.0" onAction="#onMenuItemClick" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="All tasks" textFill="WHITE">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="LIST" text="" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="importantTasksButton" contentDisplay="CENTER" layoutX="10.0" layoutY="525.0" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="Important" textFill="WHITE">
+            <JFXButton fx:id="importantTasksButton" contentDisplay="CENTER" layoutX="10.0" layoutY="525.0" onAction="#onMenuItemClick" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="Important" textFill="WHITE">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="STAR" text="" wrappingWidth="130.0" />
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="trashButton" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="644.0" onAction="#handleClicks" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="Trash" textFill="WHITE">
+            <JFXButton fx:id="trashButton" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="644.0" onAction="#onMenuItemClick" prefHeight="70.0" prefWidth="256.0" stylesheets="@../css/style.css" text="Trash" textFill="WHITE">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="TRASH" wrappingWidth="130.0" />
                </graphic>
@@ -81,7 +82,7 @@
                </children></AnchorPane>
           <AnchorPane fx:id="pnlOverview" prefHeight="200.0" prefWidth="790.0" style="-fx-background-color: white;" stylesheets="@../css/style.css" StackPane.alignment="CENTER">
                <children>
-                  <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="4.0" layoutY="175.0" prefHeight="460.0" prefWidth="786.0" style="-fx-background-color: white; -fx-background-insets: 0-0-0-0;" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="68.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="175.0">
+                  <TableView fx:id="toDoTableView" fixedCellSize="60.0" layoutX="8.0" layoutY="180.0" prefHeight="460.0" prefWidth="786.0" style="-fx-background-color: white; -fx-background-insets: 0-0-0-0;" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="180.0">
                      <columns>
                         <TableColumn fx:id="toDoDescColumn" prefWidth="517.0" style="-fx-text-alignment: center; -fx-alignment: center-left;" text="shortDesc" />
                         <TableColumn fx:id="deadLineDateColumn" prefWidth="100.0" style="-fx-alignment: center;" text="Column X" />
@@ -130,7 +131,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <Separator layoutX="33.0" layoutY="72.0" prefHeight="38.0" prefWidth="540.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="221.0" AnchorPane.topAnchor="72.0" />
+                  <Separator layoutX="26.0" layoutY="68.0" prefHeight="38.0" prefWidth="540.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="228.0" AnchorPane.topAnchor="68.0" />
                   <JFXButton fx:id="addTaskButton" layoutX="8.0" layoutY="645.0" onAction="#onAddButtonClick" opacity="0.97" prefHeight="55.0" prefWidth="777.0" text="Add new task" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="9.0">
                      <effect>
                         <DropShadow spread="0.13" />
@@ -144,13 +145,15 @@
                      <font>
                         <Font name="Verdana" size="12.0" />
                      </font></TextField>
+                  <DatePicker fx:id="minDate" layoutX="550.0" layoutY="118.0" prefHeight="27.0" prefWidth="114.0" promptText="From" stylesheets="@../css/style.css" />
+                  <DatePicker fx:id="maxDate" layoutX="672.0" layoutY="118.0" prefHeight="28.0" prefWidth="114.0" promptText="To" stylesheets="@../css/style.css" AnchorPane.leftAnchor="672.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="118.0" />
                </children>
             </AnchorPane>
          </children>
       </StackPane>
       <VBox alignment="BOTTOM_CENTER" layoutY="460.0" prefHeight="243.0" prefWidth="256.0" style="-fx-background-color: #1C3738;" visible="false">
          <children>
-            <Button fx:id="btnOrders1" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" onAction="#handleClicks" opacity="0.68" prefHeight="61.0" prefWidth="245.0" style="-fx-background-color: #F4FFF8; -fx-text-fill: black;" stylesheets="@../css/style.css" text="Add task">
+            <Button fx:id="btnOrders1" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" onAction="#onMenuItemClick" opacity="0.68" prefHeight="61.0" prefWidth="245.0" style="-fx-background-color: #F4FFF8; -fx-text-fill: black;" stylesheets="@../css/style.css" text="Add task">
                <graphic>
                   <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>

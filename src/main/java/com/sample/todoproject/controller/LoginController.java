@@ -3,7 +3,7 @@ package com.sample.todoproject.controller;
 import com.jfoenix.controls.JFXButton;
 import com.sample.todoproject.model.AppUser;
 import com.sample.todoproject.service.TaskService;
-import com.sample.todoproject.service.UserService;
+import com.sample.todoproject.service.AppUserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,7 +26,7 @@ public class LoginController implements Initializable {
 
     private final TaskService taskService;
     private final ApplicationContext applicationContext;
-    private final UserService userService;
+    private final AppUserService userService;
     @FXML
     AnchorPane anchorPane;
     @FXML
@@ -38,7 +38,7 @@ public class LoginController implements Initializable {
 
 
     @Autowired
-    public LoginController(TaskService taskService, ApplicationContext applicationContext, UserService userService) {
+    public LoginController(TaskService taskService, ApplicationContext applicationContext, AppUserService userService) {
         this.taskService = taskService;
         this.applicationContext = applicationContext;
         this.userService = userService;

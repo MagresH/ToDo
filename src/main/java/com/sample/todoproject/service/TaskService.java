@@ -1,6 +1,6 @@
 package com.sample.todoproject.service;
 
-import com.sample.todoproject.helpers.TaskListType;
+import com.sample.todoproject.enums.TaskListType;
 import com.sample.todoproject.model.Task;
 import com.sample.todoproject.repository.TaskRepository;
 import lombok.Getter;
@@ -24,17 +24,14 @@ public class TaskService {
     @Setter
     TaskListType currentTaskListType = TaskListType.TODAY;
     private final TaskRepository taskRepository;
-    private final TrashService trashService;
-
     @Autowired
-    public TaskService(TaskRepository taskRepository, TrashService trashService) {
+    public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
-        this.trashService = trashService;
     }
 
     public List<Task> getAllTasks() {
         return taskRepository
-                .findTasksByAppUser(UserService.loggedUser)
+                .findTasksByAppUser(AppUserService.loggedUser)
                 .orElse(List.of())
                 .stream()
                 .sorted(Comparator.comparing(Task::getImportantStatus).reversed())
@@ -43,7 +40,7 @@ public class TaskService {
     }
     public List<Task> getImportantTasks() {
         return taskRepository
-                .findTasksByAppUser(UserService.loggedUser)
+                .findTasksByAppUser(AppUserService.loggedUser)
                 .orElse(List.of())
                 .stream()
                 .filter(Task::getImportantStatus)
@@ -51,10 +48,9 @@ public class TaskService {
                 .sorted(Comparator.comparing(Task::getTaskStatus))
                 .toList();
     }
-
     public List<Task> getTodayTasks() {
         return taskRepository
-                .findTasksByAppUser(UserService.loggedUser)
+                .findTasksByAppUser(AppUserService.loggedUser)
                 .orElse(List.of())
                 .stream()
                 .filter(task -> Objects.equals(task.getDeadLineDate(), LocalDate.now()))
@@ -63,13 +59,13 @@ public class TaskService {
                 .toList();
     }
 
-    public Task addTask(Task task) {
-        return taskRepository.save(task);
+    public void addTask(Task task) {
+        taskRepository.save(task);
     }
 
     @Transactional
-    public Task editTask(Task task) {
-        return taskRepository.save(task);
+    public void editTask(Task task) {
+        taskRepository.save(task);
     }
 
     @Transactional
@@ -77,13 +73,5 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-
-    public List<Task> getDoneTasks() {
-        return taskRepository.findTasksByTaskStatusTrue().get();
-    }
-
-    public List<Task> getUnDoneTasks() {
-        return taskRepository.findTasksByTaskStatusFalse().get();
-    }
 
 }

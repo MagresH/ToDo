@@ -9,24 +9,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class AppUserService {
     @Setter
     public static AppUser loggedUser;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public AppUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    public List<AppUser> getUsers(){
-        List<AppUser> appUsers = userRepository.findAll();
-        return appUsers;
-    }
-    public AppUser addUser(AppUser appUser) {
-        return userRepository.save(appUser);
-    }
-
+    public AppUser addAppUser(AppUser appUser) {return userRepository.save(appUser);}
     public AppUser getAppUserByUsername(String username){
         return userRepository.findAll().stream()
                 .filter(appUser -> appUser.getUsername().equals(username))

@@ -1,6 +1,5 @@
 package com.sample.todoproject.model;
 
-import com.sample.todoproject.service.UserService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

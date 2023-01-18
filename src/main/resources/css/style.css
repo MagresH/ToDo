@@ -106,4 +106,18 @@
 .table-view .menu-item{
     -fx-text-fill: #ffffff;
 }
-    /*-fx-background-color: #1C3738;}*/
+.date-picker .cell {
+    -fx-background-color: white;
+}
+.date-picker .text-field{
+    -fx-background-color: white;
+}
+.date-picker {
+    -fx-border-color: rgba(0, 0, 0, 0.27);
+}
+
+.date-picker .arrow-button{
+    -fx-background-color: #ffffff;
+    -fx-opacity: 0.7;
+}
+

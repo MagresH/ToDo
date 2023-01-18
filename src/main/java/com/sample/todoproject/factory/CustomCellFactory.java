@@ -6,28 +6,40 @@ import com.sample.todoproject.controller.ToDoController;
 import com.sample.todoproject.service.TrashService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
+@Component
 public class CustomCellFactory {
     private final ToDoController toDoController;
     private final TaskService taskService;
     private final TrashService trashService;
-    Callback<TableColumn<Task, Task>, TableCell<Task, Task>> cellFactory;
+    private final ApplicationContext applicationContext;
+    static Callback<TableColumn<Task, Task>, TableCell<Task, Task>> cellFactory;
 
-    public Callback<TableColumn<Task, Task>, TableCell<Task, Task>> getCellFactory() {
+    public static Callback<TableColumn<Task, Task>, TableCell<Task, Task>> getCellFactory() {
         return cellFactory;
     }
 
-    public CustomCellFactory(ToDoController toDoController, TaskService taskService, TableView<Task> toDoTableView, TrashService trashService) {
+    @Autowired
+    public CustomCellFactory(ToDoController toDoController, TaskService taskService, TrashService trashService, ApplicationContext applicationContext) {
         this.taskService = taskService;
         this.toDoController = toDoController;
         this.trashService = trashService;
-        this.cellFactory = param -> new TableCell<>() {
+        this.applicationContext = applicationContext;
+        cellFactory = param -> new TableCell<>() {
             @Override
             public void updateItem(Task item, boolean empty) {
                 super.updateItem(item, empty);
@@ -54,57 +66,87 @@ public class CustomCellFactory {
                     MenuItem mi2 = new MenuItem("Mark as important");
                     MenuItem mi3 = new MenuItem("Edit task");
                     MenuItem mi4 = new MenuItem("DELETE TASK");
+
                     contextMenu.getItems().add(mi1);
                     contextMenu.getItems().add(mi2);
                     contextMenu.getItems().add(mi3);
                     contextMenu.getItems().add(mi4);
 
-                    mi1.setOnAction(event -> {
-                        toDoController.onCheckIconClick(checkIcon, toDoTableView.getSelectionModel().getSelectedItem());
-                    });
-                    mi2.setOnAction(event -> {
-                        toDoController.onStarIconClick(checkIcon, toDoTableView.getSelectionModel().getSelectedItem());
-                    });
-                    mi3.setOnAction(event -> {
-                        toDoController.onEditIconClick(toDoTableView.getSelectionModel().getSelectedItem());
-                    });
+                    mi1.setOnAction(event -> onCheckIconClick(checkIcon, getSelectedTask()));
+                    mi2.setOnAction(event -> onStarIconClick(checkIcon, getSelectedTask()));
+                    mi3.setOnAction(event -> onEditIconClick(getSelectedTask()));
                     mi4.setOnAction(event -> {
-                        Task task = toDoTableView.getSelectionModel().getSelectedItem();
-                        System.out.println(task.getDescription());
+                        Task task = getSelectedTask();
                         trashService.addTrash(task);
                         taskService.deleteTask(task);
                         toDoController.refreshTrashTable();
                         toDoController.refreshToDoTable();
                     });
-                    toDoTableView.setOnMouseClicked((MouseEvent event) -> {
+                    toDoController.toDoTableView.setOnMouseClicked((MouseEvent event) -> {
                         if (event.getButton() == MouseButton.SECONDARY) {
-                            contextMenu.show(toDoTableView.getScene().getWindow(), event.getScreenX(), event.getScreenY());
+                            contextMenu.show(toDoController.toDoTableView.getScene().getWindow(), event.getScreenX(), event.getScreenY());
                         }
-                        if ((event.getClickCount() == 2) && (toDoTableView.getSelectionModel().getSelectedItem() != null))
-                            toDoController.onEditIconClick(toDoTableView.getSelectionModel().getSelectedItem());
+                        if ((event.getClickCount() == 2) && (getSelectedTask() != null) && (event.getSource()!=checkIcon))
+                            onEditIconClick(getSelectedTask());
                     });
 
-                    checkIcon.setOnMouseClicked((MouseEvent event) -> {
-                        toDoController.onCheckIconClick(checkIcon, toDoTableView.getSelectionModel().getSelectedItem());
-                    });
+                    checkIcon.setOnMouseClicked((MouseEvent event) -> onCheckIconClick(checkIcon, getSelectedTask()));
+                    editIcon.setOnMouseClicked((MouseEvent event) -> onEditIconClick(getSelectedTask()));
+                    starIcon.setOnMouseClicked((MouseEvent event) -> onStarIconClick(starIcon, getSelectedTask()));
 
-                    editIcon.setOnMouseClicked((MouseEvent event) -> {
-                        toDoController.onEditIconClick(toDoTableView.getSelectionModel().getSelectedItem());
-                    });
-
-                    starIcon.setOnMouseClicked((MouseEvent event) -> {
-                        toDoController.onStarIconClick(starIcon, toDoTableView.getSelectionModel().getSelectedItem());
-                    });
-
-                    HBox managebtn = new HBox(starIcon, editIcon, checkIcon);
-                    managebtn.setStyle("-fx-alignment:center");
+                    HBox buttonBox = new HBox(starIcon, editIcon, checkIcon);
+                    buttonBox.setStyle("-fx-alignment:center");
                     HBox.setMargin(starIcon, new Insets(2, 3, 0, 3));
                     HBox.setMargin(checkIcon, new Insets(2, 0, 0, 3));
                     HBox.setMargin(editIcon, new Insets(2, 3, 0, 2));
-                    setGraphic(managebtn);
+                    setGraphic(buttonBox);
                 }
             }
 
         };
     }
+
+    private Task getSelectedTask() {
+        return toDoController.toDoTableView.getSelectionModel().getSelectedItem();
+    }
+
+    public void onCheckIconClick(FontAwesomeIconView checkIcon, Task task) {
+        if (task.getTaskStatus()) {
+            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
+            task.setTaskStatus(false);
+        } else {
+            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
+            task.setTaskStatus(true);
+        }
+        taskService.editTask(task);
+        toDoController.refreshToDoTable();
+    }
+
+    public void onEditIconClick(Task task) {
+        taskService.setSelectedTask(task);
+        try {
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            fxmlLoader.setLocation(getClass().getResource("/fxml/EditTask.fxml"));
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+            stage.setOnHiding(hideEvent -> toDoController.refreshToDoTable());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onStarIconClick(FontAwesomeIconView starIcon, Task task) {
+        if (task.getImportantStatus()) {
+            starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
+            task.setImportantStatus(false);
+        } else {
+            starIcon.setIcon(FontAwesomeIcon.STAR);
+            task.setImportantStatus(true);
+        }
+        taskService.editTask(task);
+        toDoController.refreshToDoTable();
+    }
+
 }

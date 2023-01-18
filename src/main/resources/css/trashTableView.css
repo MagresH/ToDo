@@ -12,27 +12,19 @@
         -fx-background-color: white;
         -fx-background-radius:14;
         -fx-background-insets: 0 0 10 0;
-
     }
 .table-row-cell{
     -fx-text-alignment: center;
     -fx-alignment: center;
 }
-.table-row-cell:filled:selected {
-    -fx-background: -fx-control-inner-background ;
-    -fx-text-fill: white;
-    -fx-background-color: linear-gradient(to right,white, rgba(28, 55, 56, 0.71));
-    -fx-text-alignment: center;
-    -fx-table-cell-border-color: derive(-fx-color, 5%);
-}
 
 .table-view .column-header, .table-view .filler{
         -fx-size:50px;
         -fx-border-width: 0 0 10 0;
-        -fx-background-color:transparent;
+        -fx-background-color:white;
     }
 .table-view .column-header .label {
-        -fx-text-fill: white ;
+        -fx-text-fill: black ;
     }
 .noheader .column-header-background {
     -fx-max-height: 0;

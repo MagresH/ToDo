@@ -44,8 +44,8 @@
                   <Font name="Verdana" size="17.0" />
                </font>
             </JFXButton>
-            <Label layoutX="129.0" layoutY="468.0" text="Already have an account?" />
-            <JFXButton fx:id="loginButton" layoutX="268.0" layoutY="464.0" onAction="#onLoginButtonClick" style="-fx-background-color: transparent; -fx-text-fill: black;" text="Login" underline="true">
+            <Label layoutX="129.0" layoutY="468.0" text="Already have an account?" AnchorPane.bottomAnchor="15.399999999999999" />
+            <JFXButton fx:id="loginButton" layoutX="268.0" layoutY="464.0" onAction="#onLoginButtonClick" style="-fx-background-color: transparent; -fx-text-fill: black;" text="Login" underline="true" AnchorPane.bottomAnchor="11.399999999999999">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

@@ -19,10 +19,10 @@ public class TrashService {
     }
 
     public List<Trash> getAllTrashes(){
-        return trashRepository.findTrashesByAppUser(UserService.loggedUser).orElse(List.of());
+        return trashRepository.findTrashesByAppUser(AppUserService.loggedUser).orElse(List.of());
     }
     public Trash addTrash(Task task) {
-        Trash trash = new Trash(task.getDescription(),task.getDeadLineDate(),LocalDateTime.now(),UserService.loggedUser);
+        Trash trash = new Trash(task.getDescription(),task.getDeadLineDate(),LocalDateTime.now(), AppUserService.loggedUser);
         return trashRepository.save(trash);
     }
 

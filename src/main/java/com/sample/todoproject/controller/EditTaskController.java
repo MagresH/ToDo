@@ -23,20 +23,13 @@ public class EditTaskController implements Initializable {
 
     private final TaskService taskService;
     @FXML
-    private JFXButton btnApply;
-
-    @FXML
-    private JFXButton btnCancel;
-
+    private JFXButton btnApply,btnCancel;
     @FXML
     private DatePicker dataPicker;
-
     @FXML
     private TextField description;
-
     @FXML
     private JFXCheckBox importantCheckBox;
-
     private Task selectedTask;
 
     @Autowired
@@ -48,10 +41,8 @@ public class EditTaskController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         selectedTask = taskService.getSelectedTask();
         description.setText(selectedTask.getDescription());
-        if (selectedTask.getImportantStatus()) {
-            importantCheckBox.selectedProperty().setValue(true);
-        }
         dataPicker.setValue(selectedTask.getDeadLineDate());
+        if (selectedTask.getImportantStatus()) importantCheckBox.selectedProperty().setValue(true);
 
     }
 

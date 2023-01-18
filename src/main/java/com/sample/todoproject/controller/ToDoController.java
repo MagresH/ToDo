@@ -4,14 +4,13 @@ package com.sample.todoproject.controller;
 import com.jfoenix.controls.JFXButton;
 import com.sample.todoproject.factory.CustomCellFactory;
 import com.sample.todoproject.factory.RowFactory;
-import com.sample.todoproject.helpers.TaskListType;
+import com.sample.todoproject.enums.TaskListType;
 import com.sample.todoproject.model.Task;
 import com.sample.todoproject.model.Trash;
 import com.sample.todoproject.service.TaskService;
 import com.sample.todoproject.service.TrashService;
-import com.sample.todoproject.service.UserService;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import com.sample.todoproject.service.AppUserService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +37,6 @@ import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
@@ -55,13 +53,13 @@ public class ToDoController implements Initializable {
     @FXML
     private TextField search;
     @FXML
-    private TableView<Task> toDoTableView;
+    public TableView<Task> toDoTableView;
     @FXML
     private TableView<Trash> trashTableView;
     @FXML
     private TableColumn<Task, String> toDoDescColumn;
     @FXML
-    private TableColumn<Task, String> trashDescColumn;
+    private TableColumn<Trash, String> trashDescColumn,trashDeleteColumn;
 
     @FXML
     private TableColumn<Task, Task> toDoCustomColumn;
@@ -70,11 +68,11 @@ public class ToDoController implements Initializable {
     @FXML
     private TableColumn<Trash, LocalDate> trashDeadLineColumn;
     @FXML
-    private TableColumn<Trash, String> trashDeleteColumn;
-    @FXML
     private ObservableList<Task> toDoTaskList;
     @FXML
     private ObservableList<Trash> trashTaskList;
+    @FXML
+    private DatePicker minDate, maxDate;
     private final TaskService taskService;
     private final ApplicationContext applicationContext;
     private final TrashService trashService;
@@ -91,7 +89,7 @@ public class ToDoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         pnlOverview.toFront();        //Moving main panel to front
-        refreshToDoTable();
+        swapDateSearch(false);
 
         //Description column
         toDoDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -104,8 +102,7 @@ public class ToDoController implements Initializable {
         deadLineDateColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.2));
 
         //Custom column
-        CustomCellFactory cellFactory = new CustomCellFactory(this, taskService, toDoTableView, trashService);
-        toDoCustomColumn.setCellFactory(cellFactory.getCellFactory());
+        toDoCustomColumn.setCellFactory(CustomCellFactory.getCellFactory());
         toDoCustomColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         toDoCustomColumn.minWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
         toDoCustomColumn.maxWidthProperty().bind(toDoTableView.widthProperty().multiply(0.175));
@@ -123,22 +120,21 @@ public class ToDoController implements Initializable {
         trashDeadLineColumn.setCellValueFactory(new PropertyValueFactory<>("deadLineDate"));
         trashDeadLineColumn.minWidthProperty().bind(trashTableView.widthProperty().multiply(0.2));
         trashDeadLineColumn.maxWidthProperty().bind(trashTableView.widthProperty().multiply(0.2));
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         trashDeleteColumn.setCellValueFactory(cell1 -> new SimpleObjectProperty<>(cell1.getValue().getDeleteDate().format(formatter)));
         trashDeleteColumn.minWidthProperty().bind(trashTableView.widthProperty().multiply(0.18));
         trashDeleteColumn.maxWidthProperty().bind(trashTableView.widthProperty().multiply(0.18));
+
         trashTableView.setItems(trashTaskList);
         trashTableView.addEventFilter(ScrollEvent.ANY, scrollEvent -> trashTableView.refresh());
         refreshTrashTable();
 
-
-    }
-
-    public Task getSelectedTask(TableView<Task> tableView) {
-        return tableView.getSelectionModel().getSelectedItem();
     }
 
     public void refreshToDoTable() {
+        minDate.setValue(LocalDate.now());
+        maxDate.setValue(LocalDate.now());
         TaskListType taskListType = taskService.getCurrentTaskListType();
 
         if (taskListType.equals(TaskListType.TODAY))
@@ -148,7 +144,7 @@ public class ToDoController implements Initializable {
         else if (taskListType.equals(TaskListType.IMPORTANT))
             toDoTaskList = FXCollections.observableList(taskService.getImportantTasks());
 
-        toDoTaskList = getSortedList(toDoTableView);
+        toDoTaskList = getFilteredListByDates();
         totalTaskLabel.setText(String.valueOf(toDoTaskList.size()));
         completedTaskLabel.setText(String.valueOf(toDoTaskList.stream().filter(Task::getTaskStatus).count()));
         toDoTask.setText(String.valueOf(toDoTaskList.stream().filter(task -> !task.getTaskStatus()).count()));
@@ -164,7 +160,23 @@ public class ToDoController implements Initializable {
         trashTableView.refresh();
     }
 
-    private SortedList<Task> getSortedList(TableView<Task> tableView) {
+    @FXML
+    private FilteredList<Task> getFilteredListByDates() {
+        FilteredList<Task> filteredItems = new FilteredList<>(getSortedListBySearch(toDoTableView));
+        filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+                    LocalDate startDate = minDate.getValue();
+                    LocalDate lastDate = maxDate.getValue();
+                    final LocalDate finalMin = minDate == null ? LocalDate.now() : startDate;
+                    final LocalDate finalMax = maxDate == null ? LocalDate.now() : lastDate;
+                    return task -> !finalMin.isAfter(task.getDeadLineDate()) && !finalMax.isBefore(task.getDeadLineDate());
+                },
+                minDate.valueProperty(),
+                maxDate.valueProperty()));
+        toDoTableView.refresh();
+        return filteredItems;
+    }
+
+    private SortedList<Task> getSortedListBySearch(TableView<Task> tableView) {
         SortedList<Task> sortedList = new SortedList<>(getFilteredList());
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.refresh();
@@ -175,32 +187,33 @@ public class ToDoController implements Initializable {
         FilteredList<Task> filteredList = new FilteredList<>(toDoTaskList, b -> true);
         search.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(task -> {
-                    if (newValue == null || newValue.isEmpty()) {
-                        toDoTableView.refresh();
-                        return true;
-                    }
-                    toDoTableView.refresh();
+                    if (newValue == null || newValue.isEmpty()) return true;
                     String lowerCaseFilter = newValue.toLowerCase();
                     if (task.getDescription().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
                     } else return task.getDeadLineDate().toString().contains(lowerCaseFilter);
                 }));
+        toDoTableView.refresh();
         return filteredList;
     }
 
-    public void handleClicks(ActionEvent actionEvent) {
+    public void onMenuItemClick(ActionEvent actionEvent) {
         var event = actionEvent.getSource();
+
         if (event == todayTasksButton) {
             pnlOverview.toFront();
+            swapDateSearch(false);
             taskListLabel.setText("Today Tasks");
             taskService.setCurrentTaskListType(TaskListType.TODAY);
             refreshToDoTable();
         } else if (event == allTasksButton) {
+            swapDateSearch(true);
             pnlOverview.toFront();
             taskListLabel.setText("All Tasks");
             taskService.setCurrentTaskListType(TaskListType.ALL);
             refreshToDoTable();
         } else if (event == importantTasksButton) {
+            swapDateSearch(true);
             pnlOverview.toFront();
             taskListLabel.setText("Important Tasks");
             taskService.setCurrentTaskListType(TaskListType.IMPORTANT);
@@ -219,17 +232,29 @@ public class ToDoController implements Initializable {
                     .description(trash.getDescription())
                     .taskStatus(false)
                     .importantStatus(false)
-                    .appUser(UserService.loggedUser)
+                    .appUser(AppUserService.loggedUser)
                     .deadLineDate(trash.getDeadLineDate())
                     .build();
             taskService.addTask(restoredTask);
             trashService.deleteTask(trash);
             trashTableView.refresh();
+
             refreshTrashTable();
             refreshToDoTable();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText("Task restored succesfully!");
             alert.show();
+        }
+    }
+
+    private void swapDateSearch(boolean flag) {
+        if (flag) {
+            minDate.setVisible(true);
+            maxDate.setVisible(true);
+        } else {
+            minDate.setVisible(false);
+            maxDate.setVisible(false);
         }
     }
 
@@ -271,43 +296,5 @@ public class ToDoController implements Initializable {
         }
     }
 
-    public void onEditIconClick(Task task) {
-        taskService.setSelectedTask(task);
-        try {
-            Stage stage = new Stage();
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            fxmlLoader.setLocation(getClass().getResource("/fxml/EditTask.fxml"));
-            stage.setScene(new Scene(fxmlLoader.load()));
-            stage.show();
-            stage.setOnHiding(hideEvent -> refreshToDoTable());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void onStarIconClick(FontAwesomeIconView starIcon, Task task) {
-        if (task.getImportantStatus()) {
-            starIcon.setIcon(FontAwesomeIcon.STAR_ALT);
-            task.setImportantStatus(false);
-        } else {
-            starIcon.setIcon(FontAwesomeIcon.STAR);
-            task.setImportantStatus(true);
-        }
-        taskService.editTask(task);
-        refreshToDoTable();
-    }
-
-    public void onCheckIconClick(FontAwesomeIconView checkIcon, Task task) {
-        if (task.getTaskStatus()) {
-            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE_ALT);
-            task.setTaskStatus(false);
-        } else {
-            checkIcon.setIcon(FontAwesomeIcon.CHECK_SQUARE);
-            task.setTaskStatus(true);
-        }
-        taskService.editTask(task);
-        refreshToDoTable();
-    }
 
 }
