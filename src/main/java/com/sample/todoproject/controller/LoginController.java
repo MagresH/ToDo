@@ -2,8 +2,7 @@ package com.sample.todoproject.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.sample.todoproject.model.AppUser;
-import com.sample.todoproject.service.TaskService;
-import com.sample.todoproject.service.AppUserService;
+import com.sample.todoproject.service.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,14 +18,14 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Controller
 public class LoginController implements Initializable {
 
-    private final TaskService taskService;
     private final ApplicationContext applicationContext;
-    private final AppUserService userService;
+    private final UserService userService;
     @FXML
     AnchorPane anchorPane;
     @FXML
@@ -38,8 +37,7 @@ public class LoginController implements Initializable {
 
 
     @Autowired
-    public LoginController(TaskService taskService, ApplicationContext applicationContext, AppUserService userService) {
-        this.taskService = taskService;
+    public LoginController(ApplicationContext applicationContext, UserService userService) {
         this.applicationContext = applicationContext;
         this.userService = userService;
     }
@@ -56,7 +54,7 @@ public class LoginController implements Initializable {
         fxmlLoader.setLocation(getClass().getResource("/fxml/Home.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
-        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
         stage.setMinWidth(1070);
         stage.setMinHeight(800);
         System.setProperty("prism.lcdtext", "false");
@@ -93,7 +91,7 @@ public class LoginController implements Initializable {
             alert.show();
         } else {
             if (user.getPassword().equals(password)) {
-                userService.setLoggedUser(user);
+                UserService.setLoggedUser(user);
                 return true;
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -112,7 +110,7 @@ public class LoginController implements Initializable {
         fxmlLoader.setLocation(getClass().getResource("/fxml/Register.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
-        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
         System.setProperty("prism.lcdtext", "false");
         stage.show();
         Stage currentStage = (Stage) anchorPane.getScene().getWindow();

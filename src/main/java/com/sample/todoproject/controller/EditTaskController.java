@@ -49,7 +49,7 @@ public class EditTaskController implements Initializable {
     public void handleClicks(ActionEvent actionEvent) {
 
         if (actionEvent.getSource() == btnApply) {
-            if ((description.getText()==null||(description.getText()==""))){
+            if ((description.getText()==null||(description.getText().equals("")))){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText("Set description!");
                 alert.show();

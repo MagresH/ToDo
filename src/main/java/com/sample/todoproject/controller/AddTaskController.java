@@ -3,7 +3,7 @@ package com.sample.todoproject.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.sample.todoproject.model.Task;
-import com.sample.todoproject.service.AppUserService;
+import com.sample.todoproject.service.UserService;
 import com.sample.todoproject.service.TaskService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +47,7 @@ public class AddTaskController implements Initializable {
         if (actionEvent.getSource() == btnApply) {
             Task newTask = new Task();
 
-            if ((description.getText()==null||(description.getText()==""))){
+            if ((description.getText()==null||(description.getText().equals("")))){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText("Set description!");
                 alert.show();
@@ -60,7 +60,7 @@ public class AddTaskController implements Initializable {
                 newTask.setDescription(description.getText());
                 newTask.setImportantStatus(importantCheckBox.isSelected());
                 newTask.setTaskStatus(false);
-                newTask.setAppUser(AppUserService.loggedUser);
+                newTask.setAppUser(UserService.loggedUser);
                 taskService.addTask(newTask);
                 Stage stage = (Stage) btnApply.getScene().getWindow();
                 stage.close();

@@ -2,7 +2,7 @@ package com.sample.todoproject.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.sample.todoproject.model.AppUser;
-import com.sample.todoproject.service.AppUserService;
+import com.sample.todoproject.service.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +22,7 @@ import java.util.*;
 @Controller
 public class RegisterController implements Initializable {
     private final ApplicationContext applicationContext;
-    private final AppUserService userService;
+    private final UserService userService;
     @FXML
     AnchorPane anchorPane;
     @FXML
@@ -32,7 +32,7 @@ public class RegisterController implements Initializable {
     @FXML
     JFXButton registerButton, loginButton;
 
-    public RegisterController(ApplicationContext applicationContext, AppUserService userService) {
+    public RegisterController(ApplicationContext applicationContext, UserService userService) {
         this.applicationContext = applicationContext;
         this.userService = userService;
     }
@@ -49,7 +49,7 @@ public class RegisterController implements Initializable {
         fxmlLoader.setLocation(getClass().getResource("/fxml/Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
-        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
         System.setProperty("prism.lcdtext", "false");
         stage.show();
         Stage currentStage = (Stage) anchorPane.getScene().getWindow();

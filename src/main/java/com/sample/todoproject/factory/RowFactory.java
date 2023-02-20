@@ -6,7 +6,7 @@ import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
 public class RowFactory {
-    public static Callback<TableView<Task>, TableRow<Task>> getRowFactoryCallback(TableView<Task> tbl){
+    public static Callback<TableView<Task>, TableRow<Task>> getRowFactoryCallback(){
         return RowFactory::rowFactory;
     }
     public static TableRow<Task> rowFactory(TableView<Task> tbl) {

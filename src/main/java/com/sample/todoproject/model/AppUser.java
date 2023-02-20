@@ -46,13 +46,6 @@ public class AppUser implements Serializable {
     @OneToMany(mappedBy = "appUser")
     private List<Task> tasks;
 
-    @OneToMany(mappedBy = "appUser")
-    private List<Trash> trashItems;
-
-    public static AppUserBuilder builder() {
-        return new AppUserBuilder();
-    }
-
 
     public static class AppUserBuilder {
         private Long id;
@@ -60,8 +53,7 @@ public class AppUser implements Serializable {
         private String lastName;
         private String username;
         private String password;
-        private List<Task> tasks;
-        private List<Trash> trashItems;
+
 
         public AppUserBuilder() {
         }
@@ -90,8 +82,5 @@ public class AppUser implements Serializable {
             return new AppUser(firstName, lastName, username, password);
         }
 
-        public String toString() {
-            return "AppUser.AppUserBuilder(id=" + this.id + ", firstName=" + this.firstName + ", lastName=" + this.lastName + ", username=" + this.username + ", password=" + this.password + ", tasks=" + this.tasks + ", trashItems=" + this.trashItems + ")";
-        }
     }
 }

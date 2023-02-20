@@ -6,23 +6,19 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class AppUserService {
+public class UserService {
     @Setter
     public static AppUser loggedUser;
     private final UserRepository userRepository;
 
     @Autowired
-    public AppUserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
     public AppUser addAppUser(AppUser appUser) {return userRepository.save(appUser);}
     public AppUser getAppUserByUsername(String username){
-        return userRepository.findAll().stream()
-                .filter(appUser -> appUser.getUsername().equals(username))
-                .findFirst()
+        return userRepository.findAppUserByUsername(username)
                 .orElse(null);
     }
 }

@@ -31,7 +31,7 @@ public class TaskService {
 
     public List<Task> getAllTasks() {
         return taskRepository
-                .findTasksByAppUser(AppUserService.loggedUser)
+                .findTasksByAppUser(UserService.loggedUser)
                 .orElse(List.of())
                 .stream()
                 .sorted(Comparator.comparing(Task::getImportantStatus).reversed())
@@ -40,7 +40,7 @@ public class TaskService {
     }
     public List<Task> getImportantTasks() {
         return taskRepository
-                .findTasksByAppUser(AppUserService.loggedUser)
+                .findTasksByAppUser(UserService.loggedUser)
                 .orElse(List.of())
                 .stream()
                 .filter(Task::getImportantStatus)
@@ -50,7 +50,7 @@ public class TaskService {
     }
     public List<Task> getTodayTasks() {
         return taskRepository
-                .findTasksByAppUser(AppUserService.loggedUser)
+                .findTasksByAppUser(UserService.loggedUser)
                 .orElse(List.of())
                 .stream()
                 .filter(task -> Objects.equals(task.getDeadLineDate(), LocalDate.now()))

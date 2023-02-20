@@ -12,13 +12,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class StageInitializer implements ApplicationListener<ToDoFXApplication.StageReadyEvent> {
     @Value("classpath:/fxml/Login.fxml")
     private Resource toDoResource;
-    private String applicationTitle;
-    private ApplicationContext applicationContext;
+    private final String applicationTitle;
+    private final ApplicationContext applicationContext;
 
     @Autowired
     public StageInitializer(@Value("${spring.application.ui.title}") String applicationTitle, ApplicationContext applicationContext) {
@@ -30,14 +31,14 @@ public class StageInitializer implements ApplicationListener<ToDoFXApplication.S
     public void onApplicationEvent(ToDoFXApplication.StageReadyEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(toDoResource.getURL());
-            fxmlLoader.setControllerFactory(aClass -> applicationContext.getBean(aClass));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
             System.setProperty("prism.lcdtext", "false");
             Parent parent = fxmlLoader.load();
             Stage stage = event.getStage();
             Scene scene = new Scene(parent);
             stage.setTitle(applicationTitle);
             stage.setScene(scene);
-            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
